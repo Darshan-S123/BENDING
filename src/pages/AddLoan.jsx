@@ -1,14 +1,15 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { getLoans, saveLoans, calculateInterest, formatCurrency } from '../utils/loanStore';
 import { Save, X, User, Phone, Wallet, Calendar, Percent, Info, ShieldCheck, ArrowRight } from 'lucide-react';
 import PageWrapper from '../components/PageWrapper';
 import AnimatedCard from '../components/AnimatedCard';
 import AnimatedButton from '../components/AnimatedButton';
 import Counter from '../components/Counter';
+import { useEffect, useState } from 'react';
 
 const AddLoan = () => {
     const navigate = useNavigate();
+    const location = useLocation();
     const [formData, setFormData] = useState({
         customerName: '',
         phone: '',
@@ -20,6 +21,16 @@ const AddLoan = () => {
         dueDate: '',
         status: 'Pending'
     });
+
+    useEffect(() => {
+        if (location.state?.draft) {
+            const draft = location.state.draft;
+            setFormData({
+                ...draft,
+                status: 'Pending' // Reset to pending when resuming
+            });
+        }
+    }, [location.state]);
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -45,8 +56,34 @@ const AddLoan = () => {
             settlementMonth: new Date(formData.dueDate).toLocaleDateString('en-IN', { month: 'long', year: 'numeric' })
         };
 
-        saveLoans([...loans, newLoan]);
+        const updatedLoans = [...loans, newLoan];
+        saveLoans(updatedLoans);
+
+        // Add to Ledger
+        import('../utils/loanStore').then(({ addToLedger }) => {
+            addToLedger({
+                customerName: formData.customerName,
+                amount: formData.principalAmount,
+                type: 'Disbursement',
+                category: 'Loan',
+                status: 'Completed'
+            });
+        });
+
         navigate('/');
+    };
+
+    const handleSaveDraft = () => {
+        const loans = getLoans();
+        const draftLoan = {
+            ...formData,
+            id: Date.now(),
+            status: 'Draft',
+            interest: '0.00',
+            totalAmount: formData.principalAmount || '0.00'
+        };
+        saveLoans([...loans, draftLoan]);
+        navigate('/drafts');
     };
 
     return (
@@ -191,7 +228,7 @@ const AddLoan = () => {
                             <AnimatedButton type="submit" fullWidth icon={Save}>
                                 Finalize & Disburse
                             </AnimatedButton>
-                            <AnimatedButton variant="secondary" fullWidth onClick={() => navigate('/')}>
+                            <AnimatedButton variant="secondary" fullWidth onClick={handleSaveDraft}>
                                 Save as Draft
                             </AnimatedButton>
                         </div>

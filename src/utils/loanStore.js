@@ -13,6 +13,31 @@ export const saveLoans = (loans) => {
     localStorage.setItem('bending_loans', encode(loans));
 };
 
+export const getLedger = () => {
+    try {
+        const ledger = localStorage.getItem('bending_ledger');
+        if (!ledger) return [];
+        return decode(ledger);
+    } catch (e) {
+        return [];
+    }
+};
+
+export const saveLedger = (entries) => {
+    localStorage.setItem('bending_ledger', encode(entries));
+};
+
+export const addToLedger = (entry) => {
+    const ledger = getLedger();
+    const newEntry = {
+        id: Date.now(),
+        date: new Date().toISOString(),
+        ...entry
+    };
+    ledger.unshift(newEntry);
+    saveLedger(ledger);
+};
+
 export const getLoans = () => {
     try {
         const loans = localStorage.getItem('bending_loans');

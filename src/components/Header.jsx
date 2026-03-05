@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Bell, Search, User } from 'lucide-react';
+import { Bell, Search, User, LogOut } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getLoans } from '../utils/loanStore';
+import { useAuth } from '../context/AuthContext';
 
 const Header = () => {
+    const { logout } = useAuth();
     const [reminders, setReminders] = useState(0);
     const [showPopup, setShowPopup] = useState(false);
 
@@ -68,14 +70,26 @@ const Header = () => {
 
                 <div className="h-8 w-px bg-white/10 mx-2" />
 
-                <div className="flex items-center gap-3 cursor-pointer group">
-                    <div className="text-right hidden sm:block">
-                        <div className="text-sm font-bold text-text-main">Darshan S</div>
-                        <div className="text-[10px] font-bold text-accent uppercase tracking-wider">Administrator</div>
+                <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-3 cursor-pointer group px-3 py-1.5 rounded-xl hover:bg-white/5 transition-all border border-transparent hover:border-white/10">
+                        <div className="text-right hidden sm:block">
+                            <div className="text-sm font-bold text-text-main">Darshan S</div>
+                            <div className="text-[10px] font-bold text-accent uppercase tracking-wider">Administrator</div>
+                        </div>
+                        <div className="w-10 h-10 rounded-xl bg-accent/20 border border-accent/20 flex items-center justify-center text-accent font-black group-hover:bg-accent/30 transition-all">
+                            D
+                        </div>
                     </div>
-                    <div className="w-10 h-10 rounded-xl bg-accent/20 border border-accent/20 flex items-center justify-center text-accent font-black group-hover:bg-accent/30 transition-all">
-                        D
-                    </div>
+
+                    <div className="h-8 w-px bg-white/10 mx-1" />
+
+                    <button
+                        onClick={logout}
+                        className="flex items-center gap-2 px-4 py-2 text-text-muted hover:text-danger hover:bg-danger/10 rounded-xl transition-all border border-white/5 hover:border-danger/20 group/logout"
+                    >
+                        <LogOut size={16} className="group-hover/logout:rotate-12 transition-transform" />
+                        <span className="text-xs font-bold uppercase tracking-widest">Sign Out</span>
+                    </button>
                 </div>
             </div>
         </header>

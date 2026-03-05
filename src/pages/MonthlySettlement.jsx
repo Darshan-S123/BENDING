@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getLoans, formatCurrency, updateLoan, calculateInterest, deleteLoan } from '../utils/loanStore';
+import { getLoans, formatCurrency, updateLoan, calculateInterest, deleteLoan, addToLedger } from '../utils/loanStore';
 import { generateSettlementPDF } from '../utils/pdfGenerator';
 import { FileDown, Search, Trash2, CheckCircle, PieChart, Edit3, X, CalendarClock, Users, Wallet, TrendingUp, IndianRupee } from 'lucide-react';
 import PageWrapper from '../components/PageWrapper';
@@ -86,6 +86,16 @@ const MonthlySettlement = () => {
         }
 
         updateLoan(settleModal.id, updatedData);
+
+        // Add to Ledger
+        addToLedger({
+            customerName: settleModal.customerName,
+            amount: settleMode === 'Full' ? (parseFloat(settleModal.principalAmount) + calculatedInt) : (parseFloat(customAmount) || 0),
+            type: settleMode === 'Partial' ? 'Partial Settlement' : 'Final Settlement',
+            category: 'Settlement',
+            status: 'Completed'
+        });
+
         setSettleModal(null);
         setCustomAmount('');
 

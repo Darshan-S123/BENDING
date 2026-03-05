@@ -60,7 +60,9 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
     const navItems = [
         { icon: LayoutDashboard, label: 'Dashboard', path: '/' },
         { icon: Wallet, label: 'Loans', path: '/loans' },
+        { icon: FileText, label: 'Drafts', path: '/drafts' },
         { icon: CreditCard, label: 'Monthly Settlement', path: '/settlement' },
+        { icon: History, label: 'Ledger', path: '/ledger' },
         { icon: FileText, label: 'Reports', path: '/reports' },
         { icon: Settings, label: 'Settings', path: '/settings' },
     ];
