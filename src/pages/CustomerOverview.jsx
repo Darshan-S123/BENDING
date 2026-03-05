@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { getLoans, formatCurrency, updateLoan, deleteLoan } from '../utils/loanStore';
-import { Search, User, Phone, Wallet, Calendar, Tag, Edit2, Save, X, Trash2 } from 'lucide-react';
+import { Search, User, Phone, Wallet, Calendar, Tag, Edit2, Save, X, Trash2, ShieldCheck, Mail, Activity, ArrowUpRight } from 'lucide-react';
+import PageWrapper from '../components/PageWrapper';
+import AnimatedCard from '../components/AnimatedCard';
+import AnimatedButton from '../components/AnimatedButton';
+import Counter from '../components/Counter';
 
 const CustomerOverview = () => {
     const [loans, setLoans] = useState([]);
@@ -18,7 +22,7 @@ const CustomerOverview = () => {
     };
 
     const handleDelete = (id) => {
-        if (window.confirm("Are you sure you want to delete this loan record? This action cannot be undone.")) {
+        if (window.confirm("Terminate this portfolio record?")) {
             if (deleteLoan(id)) {
                 setLoans(getLoans());
             }
@@ -38,317 +42,141 @@ const CustomerOverview = () => {
     );
 
     return (
-        <div className="fade-in">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-                <h2>SS FINANCE - Customer Overview</h2>
-                <div className="glass search-bar">
-                    <Search size={18} color="var(--muted-foreground)" />
+        <PageWrapper>
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-12">
+                <div>
+                    <h1 className="text-4xl font-black text-text-main tracking-tightest">Customer Portfolio</h1>
+                    <p className="text-text-muted text-sm font-bold flex items-center gap-2 mt-2 uppercase tracking-widest">
+                        <Activity size={14} className="text-accent" />
+                        Global Entity Directory
+                    </p>
+                </div>
+                <div className="relative group">
+                    <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-text-muted group-focus-within:text-accent transition-colors" />
                     <input
                         type="text"
-                        placeholder="Search by name or phone..."
+                        placeholder="SEARCH ENTITY..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
+                        className="w-full lg:w-96 bg-white/5 border border-white/5 rounded-2xl pl-12 pr-4 py-3.5 text-xs font-black uppercase tracking-widest focus:border-accent/30 outline-none transition-all placeholder:text-text-muted/30"
                     />
                 </div>
             </div>
 
-            <div className="customer-grid">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
                 {filteredLoans.length > 0 ? (
-                    filteredLoans.map(loan => (
-                        <div key={loan.id} className="glass customer-card">
-                            <div className="card-header">
-                                <div className="user-icon">
-                                    <User size={20} color="var(--accent)" />
-                                </div>
-                                <div className="user-info">
-                                    <h4>{loan.customerName}</h4>
-                                    <p><Phone size={12} /> {loan.phone}</p>
-                                </div>
-                                <div style={{ display: 'flex', gap: '0.5rem', marginLeft: 'auto', alignItems: 'center' }}>
-                                    <button onClick={() => handleEdit(loan)} className="btn-icon-edit" title="Edit Customer">
-                                        <Edit2 size={16} />
-                                    </button>
-                                    <button onClick={() => handleDelete(loan.id)} className="btn-icon-delete" title="Delete Loan">
-                                        <Trash2 size={16} />
-                                    </button>
-                                    <div className={`status-badge ${loan.status.toLowerCase()}`}>
+                    filteredLoans.map((loan, index) => (
+                        <AnimatedCard key={loan.id} delay={index * 0.05} noHover className="p-0 overflow-hidden group">
+                            <div className="p-8">
+                                <div className="flex items-start justify-between mb-8">
+                                    <div className="flex items-center gap-4">
+                                        <div className="w-14 h-14 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center text-accent group-hover:bg-accent group-hover:text-primary transition-all duration-500">
+                                            <User size={28} />
+                                        </div>
+                                        <div>
+                                            <h4 className="text-xl font-black text-text-main tracking-tight group-hover:text-accent transition-colors">{loan.customerName}</h4>
+                                            <p className="text-[10px] text-text-muted font-black uppercase tracking-[0.2em] mt-1">
+                                                ID: {loan.id.toString().slice(-6)}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <span className={`px-2 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest ${loan.status === 'Paid' ? 'bg-success/20 text-success' : 'bg-accent/20 text-accent'
+                                        }`}>
                                         {loan.status}
+                                    </span>
+                                </div>
+
+                                <div className="space-y-4 mb-8">
+                                    <ContactRow icon={Phone} label="Comm Link" value={loan.phone} />
+                                    <ContactRow icon={Calendar} label="Last Activity" value={loan.dueDate} />
+                                </div>
+
+                                <div className="grid grid-cols-2 gap-4 mb-8">
+                                    <div className="p-4 bg-white/5 rounded-2xl border border-white/5 group-hover:bg-accent/[0.02] transition-colors">
+                                        <span className="block text-[9px] font-black text-text-muted uppercase tracking-widest mb-1">Exposure</span>
+                                        <div className="text-lg font-black text-text-main">
+                                            <Counter value={loan.principalAmount} prefix="₹" />
+                                        </div>
+                                    </div>
+                                    <div className="p-4 bg-white/5 rounded-2xl border border-white/5 group-hover:bg-accent/[0.02] transition-colors">
+                                        <span className="block text-[9px] font-black text-text-muted uppercase tracking-widest mb-1">Yield</span>
+                                        <div className="text-lg font-black text-accent">
+                                            <Counter value={loan.interest} prefix="₹" />
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div className="card-body">
-                                <div className="info-item">
-                                    <span className="label">Principal</span>
-                                    <span className="value">{formatCurrency(loan.principalAmount)}</span>
-                                </div>
-                                <div className="info-item">
-                                    <span className="label">Interest ({loan.interestRate}% {loan.interestBasis || 'Monthly'})</span>
-                                    <span className="value">{formatCurrency(loan.interest)}</span>
-                                </div>
-                                <div className="info-item total">
-                                    <span className="label">Total Amount</span>
-                                    <span className="value">{formatCurrency(loan.totalAmount)}</span>
+                                <div className="flex gap-3 pt-6 border-t border-white/5">
+                                    <AnimatedButton variant="secondary" fullWidth className="py-2.5 text-[10px]" onClick={() => handleEdit(loan)}>
+                                        MANAGE ENTITY
+                                    </AnimatedButton>
+                                    <button
+                                        onClick={() => handleDelete(loan.id)}
+                                        className="p-2.5 bg-white/5 border border-white/5 text-text-muted hover:text-danger hover:border-danger/30 rounded-xl transition-all"
+                                    >
+                                        <Trash2 size={18} />
+                                    </button>
                                 </div>
                             </div>
-
-                            <div className="card-footer">
-                                <div className="footer-item">
-                                    <Calendar size={14} />
-                                    <span>Due: {loan.dueDate}</span>
-                                </div>
-                                <div className="footer-item">
-                                    <Tag size={14} />
-                                    <span>{loan.interestType}</span>
-                                </div>
-                            </div>
-                        </div>
+                        </AnimatedCard>
                     ))
                 ) : (
-                    <div className="glass no-data">
-                        <p>No customers found matching your search.</p>
+                    <div className="col-span-full py-32 flex flex-col items-center justify-center opacity-50">
+                        <ShieldCheck size={64} className="text-text-muted/20 mb-6" />
+                        <h3 className="text-xl font-black text-text-main mb-2 tracking-tight">Records Missing</h3>
+                        <p className="text-text-muted text-xs font-bold uppercase tracking-widest">Zero matches found in decrypted database.</p>
                     </div>
                 )}
             </div>
 
+            {/* Edit Modal Refactored */}
             {editModal && (
-                <div className="modal-overlay">
-                    <div className="glass modal-content">
-                        <h3 style={{ marginBottom: '1.5rem' }}>Edit Customer</h3>
-                        <div className="form-group" style={{ marginBottom: '1rem' }}>
-                            <label>Customer Name</label>
-                            <input
-                                type="text"
-                                value={editForm.customerName}
-                                onChange={(e) => setEditForm({ ...editForm, customerName: e.target.value })}
-                            />
+                <div className="fixed inset-0 bg-background/80 backdrop-blur-md z-[100] flex items-center justify-center p-6">
+                    <AnimatedCard className="w-full max-w-md p-8" noHover>
+                        <div className="flex justify-between items-start mb-8">
+                            <h3 className="text-2xl font-black text-text-main tracking-tight">Record Refactor</h3>
+                            <button onClick={() => setEditModal(null)} className="p-2 text-text-muted hover:text-text-main rounded-xl hover:bg-white/5 transition-all">
+                                <X size={20} />
+                            </button>
                         </div>
-                        <div className="form-group" style={{ marginBottom: '2rem' }}>
-                            <label>Phone Number</label>
-                            <input
-                                type="tel"
-                                value={editForm.phone}
-                                onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })}
-                            />
+                        <div className="space-y-6 mb-10">
+                            <div>
+                                <label className="block text-[10px] font-black text-text-muted uppercase tracking-[0.2em] mb-2">Primary Entity Name</label>
+                                <input
+                                    type="text"
+                                    value={editForm.customerName}
+                                    onChange={(e) => setEditForm({ ...editForm, customerName: e.target.value })}
+                                    className="w-full bg-white/5 border border-white/5 rounded-xl px-4 py-3 text-sm focus:border-accent/30 outline-none font-bold"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-[10px] font-black text-text-muted uppercase tracking-[0.2em] mb-2">Communication Uplink</label>
+                                <input
+                                    type="tel"
+                                    value={editForm.phone}
+                                    onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })}
+                                    className="w-full bg-white/5 border border-white/5 rounded-xl px-4 py-3 text-sm focus:border-accent/30 outline-none font-bold"
+                                />
+                            </div>
                         </div>
-                        <div style={{ display: 'flex', gap: '1rem' }}>
-                            <button onClick={handleSave} className="btn-primary" style={{ flex: 1 }}><Save size={18} /> Save</button>
-                            <button onClick={() => setEditModal(null)} className="btn-secondary" style={{ flex: 1 }}><X size={18} /> Cancel</button>
-                        </div>
-                    </div>
+                        <AnimatedButton fullWidth icon={Save} onClick={handleSave}>
+                            Commit Changes
+                        </AnimatedButton>
+                    </AnimatedCard>
                 </div>
             )}
-
-            <style>{`
-                .search-bar {
-                    display: flex;
-                    align-items: center;
-                    gap: 0.75rem;
-                    padding: 0.6rem 1rem;
-                    border-radius: 0.75rem;
-                    width: 320px;
-                }
-                .search-bar input {
-                    background: transparent;
-                    border: none;
-                    color: var(--foreground);
-                    outline: none;
-                    width: 100%;
-                }
-                .customer-grid {
-                    display: grid;
-                    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-                    gap: 1.5rem;
-                }
-                .customer-card {
-                    padding: 1.5rem;
-                    border-radius: 1rem;
-                    display: flex;
-                    flex-direction: column;
-                    gap: 1.25rem;
-                    transition: transform 0.2s ease;
-                }
-                .customer-card:hover {
-                    transform: translateY(-4px);
-                    border-color: var(--accent);
-                }
-                .card-header {
-                    display: flex;
-                    align-items: center;
-                    gap: 1rem;
-                    position: relative;
-                }
-                .user-icon {
-                    width: 40px;
-                    height: 40px;
-                    background: rgba(202, 138, 4, 0.1);
-                    border-radius: 50%;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                }
-                .user-info h4 {
-                    margin: 0;
-                    font-size: 1.1rem;
-                }
-                .user-info p {
-                    margin: 0;
-                    font-size: 0.8rem;
-                    color: var(--muted-foreground);
-                    display: flex;
-                    align-items: center;
-                    gap: 0.4rem;
-                }
-                .status-badge {
-                    position: absolute;
-                    top: 0;
-                    right: 0;
-                    font-size: 0.7rem;
-                    padding: 0.25rem 0.6rem;
-                    border-radius: 2rem;
-                    font-weight: 600;
-                    text-transform: uppercase;
-                }
-                .status-badge.pending { background: rgba(202, 138, 4, 0.2); color: var(--accent); }
-                .status-badge.completed { background: rgba(16, 185, 129, 0.2); color: var(--success); }
-                .status-badge.overdue { background: rgba(239, 68, 68, 0.2); color: var(--danger); }
-
-                .card-body {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 0.75rem;
-                }
-                .info-item {
-                    display: flex;
-                    justify-content: space-between;
-                    font-size: 0.9rem;
-                }
-                .info-item.total {
-                    margin-top: 0.5rem;
-                    padding-top: 0.75rem;
-                    border-top: 1px solid var(--card-border);
-                    font-weight: 700;
-                    color: var(--accent);
-                }
-                .label { color: var(--muted-foreground); }
-
-                .card-footer {
-                    display: flex;
-                    justify-content: space-between;
-                    font-size: 0.8rem;
-                    color: var(--muted-foreground);
-                    border-top: 1px dashed var(--card-border);
-                    padding-top: 1rem;
-                }
-                .footer-item {
-                    display: flex;
-                    align-items: center;
-                    gap: 0.4rem;
-                }
-                .no-data {
-                    grid-column: 1 / -1;
-                    padding: 3rem;
-                    text-align: center;
-                    color: var(--muted-foreground);
-                    border-radius: 1rem;
-                }
-                .btn-icon-edit {
-                    background: rgba(202, 138, 4, 0.1);
-                    color: var(--accent);
-                    border: 1px solid rgba(202, 138, 4, 0.2);
-                    width: 32px;
-                    height: 32px;
-                    border-radius: 0.5rem;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    cursor: pointer;
-                    transition: all 0.2s;
-                }
-                .btn-icon-edit:hover {
-                    background: var(--accent);
-                    color: white;
-                }
-                .btn-icon-delete {
-                    background: rgba(239, 68, 68, 0.1);
-                    color: #ef4444;
-                    border: 1px solid rgba(239, 68, 68, 0.2);
-                    width: 32px;
-                    height: 32px;
-                    border-radius: 0.5rem;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    cursor: pointer;
-                    transition: all 0.2s;
-                }
-                .btn-icon-delete:hover {
-                    background: #ef4444;
-                    color: white;
-                }
-                .modal-overlay {
-                    position: fixed;
-                    top: 0;
-                    left: 0;
-                    right: 0;
-                    bottom: 0;
-                    background: rgba(0,0,0,0.7);
-                    backdrop-filter: blur(4px);
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    z-index: 1000;
-                }
-                .modal-content {
-                    width: 100%;
-                    max-width: 400px;
-                    padding: 2rem;
-                    border-radius: 1.5rem;
-                }
-                .form-group label {
-                    display: block;
-                    margin-bottom: 0.5rem;
-                    font-size: 0.875rem;
-                    color: var(--muted-foreground);
-                }
-                .form-group input {
-                    width: 100%;
-                    background: var(--secondary);
-                    border: 1px solid var(--card-border);
-                    color: var(--foreground);
-                    padding: 0.75rem;
-                    border-radius: 0.5rem;
-                    outline: none;
-                }
-                .btn-primary {
-                    background: var(--accent);
-                    color: var(--accent-foreground);
-                    padding: 0.75rem 1.5rem;
-                    border-radius: 0.5rem;
-                    font-weight: 600;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    gap: 0.5rem;
-                    cursor: pointer;
-                    border: none;
-                }
-                .btn-secondary {
-                    background: var(--muted);
-                    color: var(--foreground);
-                    padding: 0.75rem 1.5rem;
-                    border-radius: 0.5rem;
-                    font-weight: 600;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    gap: 0.5rem;
-                    cursor: pointer;
-                    border: none;
-                }
-            `}</style>
-        </div>
+        </PageWrapper>
     );
 };
+
+const ContactRow = ({ icon: Icon, label, value }) => (
+    <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-widest border-b border-white/[0.02] pb-2">
+        <div className="flex items-center gap-2 text-text-muted">
+            <Icon size={12} className="text-accent" />
+            <span>{label}</span>
+        </div>
+        <span className="text-text-main">{value}</span>
+    </div>
+);
 
 export default CustomerOverview;
