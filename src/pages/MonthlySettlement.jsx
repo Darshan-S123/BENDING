@@ -20,10 +20,13 @@ const MonthlySettlement = () => {
     const [customAmount, setCustomAmount] = useState('');
 
     useEffect(() => {
-        const allLoans = getLoans();
-        setLoans(allLoans);
-        const filtered = allLoans.filter(l => l.settlementMonth === selectedMonth && l.status === 'Pending');
-        setFilteredLoans(filtered);
+        const fetchLoans = async () => {
+            const allLoans = await getLoans();
+            setLoans(allLoans);
+            const filtered = allLoans.filter(l => l.settlementMonth === selectedMonth && l.status === 'Pending');
+            setFilteredLoans(filtered);
+        };
+        fetchLoans();
     }, [selectedMonth]);
 
     const handleDownload = () => {
@@ -34,17 +37,18 @@ const MonthlySettlement = () => {
         generateSettlementPDF(selectedMonth, filteredLoans);
     };
 
-    const handleDelete = (id) => {
+    const handleDelete = async (id) => {
         if (window.confirm("Delete this loan record? This cannot be undone.")) {
-            if (deleteLoan(id)) {
-                const allLoans = getLoans();
+            const success = await deleteLoan(id);
+            if (success) {
+                const allLoans = await getLoans();
                 setLoans(allLoans);
                 setFilteredLoans(allLoans.filter(l => l.settlementMonth === selectedMonth && l.status === 'Pending'));
             }
         }
     };
 
-    const confirmSettlement = () => {
+    const confirmSettlement = async () => {
         const calculatedInt = calculateInterest(
             settleModal.principalAmount,
             settleModal.interestRate,
@@ -85,10 +89,9 @@ const MonthlySettlement = () => {
             };
         }
 
-        updateLoan(settleModal.id, updatedData);
+        await updateLoan(settleModal.id, updatedData);
 
-        // Add to Ledger
-        addToLedger({
+        await addToLedger({
             customerName: settleModal.customerName,
             amount: settleMode === 'Full' ? (parseFloat(settleModal.principalAmount) + calculatedInt) : (parseFloat(customAmount) || 0),
             type: settleMode === 'Partial' ? 'Partial Settlement' : 'Final Settlement',
@@ -99,7 +102,7 @@ const MonthlySettlement = () => {
         setSettleModal(null);
         setCustomAmount('');
 
-        const allLoans = getLoans();
+        const allLoans = await getLoans();
         setLoans(allLoans);
         setFilteredLoans(allLoans.filter(l => l.settlementMonth === selectedMonth && l.status === 'Pending'));
     };

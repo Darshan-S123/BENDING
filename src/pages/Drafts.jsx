@@ -1,24 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { FileText, Search, Trash2, ArrowRight } from 'lucide-react';
+import { FileText, Trash2, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import PageWrapper from '../components/PageWrapper';
-import { getLoans, saveLoans } from '../utils/loanStore';
+import { getLoans, deleteLoan } from '../utils/loanStore';
 
 const Drafts = () => {
     const navigate = useNavigate();
     const [drafts, setDrafts] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const loans = getLoans();
-        setDrafts(loans.filter(l => l.status === 'Draft'));
+        const fetchDrafts = async () => {
+            const loans = await getLoans();
+            setDrafts(loans.filter(l => l.status === 'Draft'));
+            setLoading(false);
+        };
+        fetchDrafts();
     }, []);
 
-    const deleteDraft = (id) => {
-        const loans = getLoans();
-        const filtered = loans.filter(l => l.id !== id);
-        saveLoans(filtered);
-        setDrafts(filtered.filter(l => l.status === 'Draft'));
+    const handleDeleteDraft = async (id) => {
+        await deleteLoan(id);
+        setDrafts(prev => prev.filter(d => d.id !== id));
     };
 
     return (
@@ -30,7 +33,9 @@ const Drafts = () => {
                 </header>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {drafts.length > 0 ? drafts.map((draft) => (
+                    {loading ? (
+                        <div className="col-span-full py-20 text-center text-text-muted font-bold">Loading drafts...</div>
+                    ) : drafts.length > 0 ? drafts.map((draft) => (
                         <motion.div
                             key={draft.id}
                             initial={{ opacity: 0, y: 20 }}
@@ -42,7 +47,7 @@ const Drafts = () => {
                                     <FileText size={20} />
                                 </div>
                                 <button
-                                    onClick={() => deleteDraft(draft.id)}
+                                    onClick={() => handleDeleteDraft(draft.id)}
                                     className="p-2 text-text-muted hover:text-danger hover:bg-danger/10 rounded-lg transition-all"
                                 >
                                     <Trash2 size={16} />

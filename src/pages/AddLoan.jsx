@@ -1,5 +1,5 @@
 import { useNavigate, useLocation } from 'react-router-dom';
-import { getLoans, saveLoans, calculateInterest, formatCurrency } from '../utils/loanStore';
+import { saveLoan, deleteLoan, calculateInterest, formatCurrency, addToLedger } from '../utils/loanStore';
 import { Save, X, User, Phone, Wallet, Calendar, Percent, Info, ShieldCheck, ArrowRight } from 'lucide-react';
 import PageWrapper from '../components/PageWrapper';
 import AnimatedCard from '../components/AnimatedCard';
@@ -36,9 +36,8 @@ const AddLoan = () => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        const loans = getLoans();
         const interest = calculateInterest(
             formData.principalAmount,
             formData.interestRate,
@@ -56,25 +55,24 @@ const AddLoan = () => {
             settlementMonth: new Date(formData.dueDate).toLocaleDateString('en-IN', { month: 'long', year: 'numeric' })
         };
 
-        const updatedLoans = [...loans, newLoan];
-        saveLoans(updatedLoans);
+        // If resuming a draft, delete the old draft first
+        if (location.state?.draft?.id) {
+            await deleteLoan(location.state.draft.id);
+        }
 
-        // Add to Ledger
-        import('../utils/loanStore').then(({ addToLedger }) => {
-            addToLedger({
-                customerName: formData.customerName,
-                amount: formData.principalAmount,
-                type: 'Disbursement',
-                category: 'Loan',
-                status: 'Completed'
-            });
+        await saveLoan(newLoan);
+        await addToLedger({
+            customerName: formData.customerName,
+            amount: formData.principalAmount,
+            type: 'Disbursement',
+            category: 'Loan',
+            status: 'Completed'
         });
 
         navigate('/');
     };
 
-    const handleSaveDraft = () => {
-        const loans = getLoans();
+    const handleSaveDraft = async () => {
         const draftLoan = {
             ...formData,
             id: Date.now(),
@@ -82,7 +80,7 @@ const AddLoan = () => {
             interest: '0.00',
             totalAmount: formData.principalAmount || '0.00'
         };
-        saveLoans([...loans, draftLoan]);
+        await saveLoan(draftLoan);
         navigate('/drafts');
     };
 
