@@ -13,7 +13,11 @@ const CustomerOverview = () => {
     const [editForm, setEditForm] = useState({ customerName: '', phone: '' });
 
     useEffect(() => {
-        setLoans(getLoans());
+        const fetchLoans = async () => {
+            const data = await getLoans();
+            setLoans(data);
+        };
+        fetchLoans();
     }, []);
 
     const handleEdit = (loan) => {
@@ -21,18 +25,22 @@ const CustomerOverview = () => {
         setEditForm({ customerName: loan.customerName, phone: loan.phone });
     };
 
-    const handleDelete = (id) => {
+    const handleDelete = async (id) => {
         if (window.confirm("Terminate this portfolio record?")) {
-            if (deleteLoan(id)) {
-                setLoans(getLoans());
+            const success = await deleteLoan(id);
+            if (success) {
+                const data = await getLoans();
+                setLoans(data);
             }
         }
     };
 
-    const handleSave = () => {
-        if (updateLoan(editModal.id, editForm)) {
+    const handleSave = async () => {
+        const success = await updateLoan(editModal.id, editForm);
+        if (success) {
             setEditModal(null);
-            setLoans(getLoans());
+            const data = await getLoans();
+            setLoans(data);
         }
     };
 

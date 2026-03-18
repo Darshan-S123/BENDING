@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getLoans, saveLoans, formatCurrency } from '../utils/loanStore';
+import { getLoans, saveLoan, updateLoan, formatCurrency } from '../utils/loanStore';
 import { AlertCircle, ArrowRightCircle, Plus, ShieldAlert, History, TrendingUp, ShieldX, Zap } from 'lucide-react';
 import PageWrapper from '../components/PageWrapper';
 import AnimatedCard from '../components/AnimatedCard';
@@ -10,26 +10,26 @@ const OverdueManagement = () => {
     const [overdueLoans, setOverdueLoans] = useState([]);
 
     useEffect(() => {
-        const allLoans = getLoans();
-        const today = new Date();
-        const overdues = allLoans.filter(l => new Date(l.dueDate) < today && l.status === 'Pending');
-        setOverdueLoans(overdues);
+        const fetchOverdue = async () => {
+            const allLoans = await getLoans();
+            const today = new Date();
+            const overdues = allLoans.filter(l => new Date(l.dueDate) < today && l.status === 'Pending');
+            setOverdueLoans(overdues);
+        };
+        fetchOverdue();
     }, []);
 
-    const handleCarryForward = (loan) => {
-        const allLoans = getLoans();
+    const handleCarryForward = async (loan) => {
         const penalty = parseFloat(loan.principalAmount) * 0.05; // 5% penalty
         const newPrincipal = parseFloat(loan.principalAmount) + penalty;
 
-        // Create new loan for next month
         const newDueDate = new Date(loan.dueDate);
         newDueDate.setMonth(newDueDate.getMonth() + 1);
 
-        const updatedLoans = allLoans.map(l => {
-            if (l.id === loan.id) return { ...l, status: 'Overdue' };
-            return l;
-        });
+        // Mark old loan as Overdue
+        await updateLoan(loan.id, { status: 'Overdue' });
 
+        // Create new carried-forward loan
         const forwardLoan = {
             ...loan,
             id: Date.now(),
@@ -41,11 +41,11 @@ const OverdueManagement = () => {
             settlementMonth: newDueDate.toLocaleDateString('en-IN', { month: 'long', year: 'numeric' }),
             status: 'Pending'
         };
+        await saveLoan(forwardLoan);
 
-        const finalLoans = [...updatedLoans, forwardLoan];
-        saveLoans(finalLoans);
+        const allLoans = await getLoans();
         const today = new Date();
-        setOverdueLoans(finalLoans.filter(l => new Date(l.dueDate) < today && l.status === 'Pending'));
+        setOverdueLoans(allLoans.filter(l => new Date(l.dueDate) < today && l.status === 'Pending'));
         alert(`Risk Mitigated: Loan carried forward to ${forwardLoan.settlementMonth} with ₹${penalty.toFixed(2)} penalty.`);
     };
 

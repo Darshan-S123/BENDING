@@ -9,7 +9,11 @@ const Ledger = () => {
     const [searchTerm, setSearchTerm] = useState('');
 
     useEffect(() => {
-        setEntries(getLedger());
+        const fetchLedger = async () => {
+            const data = await getLedger();
+            setEntries(data);
+        };
+        fetchLedger();
     }, []);
 
     const filteredEntries = entries.filter(e =>
