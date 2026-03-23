@@ -1,5 +1,6 @@
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
+import { addReport } from './loanStore';
 
 export const generateSettlementPDF = (month, loans) => {
     const doc = new jsPDF();
@@ -98,15 +99,11 @@ export const generateSettlementPDF = (month, loans) => {
     const filename = `Finance-Report-${month.replace(' ', '-')}.pdf`;
     doc.save(filename);
 
-    // Save to history (mock)
-    const history = JSON.parse(localStorage.getItem('bending_reports') || '[]');
-    history.push({
-        id: Date.now(),
+    // Save to history via Supabase-backed store
+    addReport({
         month,
         members: loans.length,
         total: totalExpected.toFixed(2),
         filename,
-        date: new Date().toISOString()
     });
-    localStorage.setItem('bending_reports', JSON.stringify(history));
 };

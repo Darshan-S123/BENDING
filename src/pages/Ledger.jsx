@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { History, Search, Download, Filter, ArrowUpRight, ArrowDownLeft } from 'lucide-react';
 import PageWrapper from '../components/PageWrapper';
-import { getLedger, formatCurrency } from '../utils/loanStore';
+import { getLedger, formatCurrency, exportLedgerCSV } from '../utils/loanStore';
 
 const Ledger = () => {
     const [entries, setEntries] = useState([]);
@@ -41,7 +41,11 @@ const Ledger = () => {
                                 onChange={(e) => setSearchTerm(e.target.value)}
                             />
                         </div>
-                        <button className="p-2.5 bg-secondary hover:bg-white/10 rounded-xl text-text-main border border-white/5 transition-all">
+                        <button
+                            onClick={() => exportLedgerCSV()}
+                            title="Download as CSV"
+                            className="p-2.5 bg-secondary hover:bg-white/10 rounded-xl text-text-main border border-white/5 transition-all"
+                        >
                             <Download size={20} />
                         </button>
                     </div>
@@ -55,6 +59,7 @@ const Ledger = () => {
                                     <th className="px-6 py-5">Date</th>
                                     <th className="px-6 py-5">Customer</th>
                                     <th className="px-6 py-5">Type</th>
+                                    <th className="px-6 py-5">Category</th>
                                     <th className="px-6 py-5 text-right">Amount</th>
                                     <th className="px-6 py-5">Status</th>
                                 </tr>
@@ -83,6 +88,13 @@ const Ledger = () => {
                                                 <span className="text-xs font-bold text-text-muted uppercase tracking-wider">{entry.type}</span>
                                             </div>
                                         </td>
+                                        <td className="px-6 py-4">
+                                            <span className={`px-2 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest ${
+                                                entry.category === 'Settlement' ? 'bg-success/10 text-success' :
+                                                entry.category === 'Penalty' ? 'bg-danger/10 text-danger' :
+                                                'bg-accent/10 text-accent'
+                                            }`}>{entry.category || 'Loan'}</span>
+                                        </td>
                                         <td className="px-6 py-4 text-right">
                                             <span className={`text-sm font-black ${entry.category === 'Settlement' ? 'text-success' : 'text-text-main'}`}>
                                                 {formatCurrency(entry.amount)}
@@ -96,7 +108,7 @@ const Ledger = () => {
                                     </motion.tr>
                                 )) : (
                                     <tr>
-                                        <td colSpan="5" className="px-6 py-20 text-center text-text-muted font-bold">
+                                        <td colSpan="6" className="px-6 py-20 text-center text-text-muted font-bold">
                                             No transactions found
                                         </td>
                                     </tr>

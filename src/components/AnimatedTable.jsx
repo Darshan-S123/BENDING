@@ -1,8 +1,9 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { fadeInUp, staggerContainer } from '../animations/variants';
+import { Inbox } from 'lucide-react';
 
-const AnimatedTable = ({ headers, data, renderRow, className = "" }) => {
+const AnimatedTable = ({ headers, data, renderRow, className = "", emptyMessage = "No records found" }) => {
     return (
         <motion.div
             variants={staggerContainer}
@@ -24,7 +25,7 @@ const AnimatedTable = ({ headers, data, renderRow, className = "" }) => {
                     </tr>
                 </thead>
                 <tbody className="divide-y divide-border">
-                    {data.map((item, index) => (
+                    {data.length > 0 ? data.map((item, index) => (
                         <motion.tr
                             key={item.id || index}
                             variants={fadeInUp}
@@ -36,7 +37,16 @@ const AnimatedTable = ({ headers, data, renderRow, className = "" }) => {
                                 </td>
                             ))}
                         </motion.tr>
-                    ))}
+                    )) : (
+                        <tr>
+                            <td colSpan={headers.length} className="px-6 py-20 text-center">
+                                <div className="flex flex-col items-center gap-3 text-text-muted/40">
+                                    <Inbox size={36} />
+                                    <span className="text-xs font-black uppercase tracking-widest">{emptyMessage}</span>
+                                </div>
+                            </td>
+                        </tr>
+                    )}
                 </tbody>
             </table>
         </motion.div>

@@ -8,8 +8,8 @@ export const AuthProvider = ({ children }) => {
     });
 
     const login = (password) => {
-        // Master password for the application
-        if (password === '5005') {
+        const masterPin = localStorage.getItem('bending_master_pin') || '5005';
+        if (password === masterPin) {
             setIsAuthenticated(true);
             sessionStorage.setItem('bending_auth', 'true');
             return true;

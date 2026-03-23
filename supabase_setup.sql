@@ -41,3 +41,16 @@ CREATE TABLE IF NOT EXISTS ledger (
 -- ============================================================
 ALTER TABLE loans DISABLE ROW LEVEL SECURITY;
 ALTER TABLE ledger DISABLE ROW LEVEL SECURITY;
+
+-- ============================================================
+-- REPORTS TABLE
+-- ============================================================
+CREATE TABLE IF NOT EXISTS reports (
+    id BIGINT PRIMARY KEY,
+    date TIMESTAMPTZ DEFAULT NOW(),
+    month TEXT,
+    members INT,
+    total TEXT,
+    filename TEXT
+);
+ALTER TABLE reports DISABLE ROW LEVEL SECURITY;

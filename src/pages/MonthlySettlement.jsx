@@ -72,11 +72,27 @@ const MonthlySettlement = () => {
             const totalDue = parseFloat(settleModal.principalAmount) + calculatedInt;
             const newPrincipal = totalDue - paid;
 
+            // New due date = 1 period after settlement date
+            const nextDueDate = new Date(settleDate);
+            nextDueDate.setMonth(nextDueDate.getMonth() + 1);
+            const nextDueDateStr = nextDueDate.toISOString().split('T')[0];
+
+            const newInterest = calculateInterest(
+                newPrincipal,
+                settleModal.interestRate,
+                settleModal.interestType,
+                settleDate,
+                nextDueDateStr,
+                settleModal.interestBasis
+            );
+
             updatedData = {
                 principalAmount: newPrincipal.toFixed(2),
-                interest: (newPrincipal * (parseFloat(settleModal.interestRate) / 100)).toFixed(2),
-                totalAmount: (newPrincipal * (1 + parseFloat(settleModal.interestRate) / 100)).toFixed(2),
+                interest: newInterest.toFixed(2),
+                totalAmount: (newPrincipal + newInterest).toFixed(2),
                 borrowDate: settleDate,
+                dueDate: nextDueDateStr,
+                settlementMonth: nextDueDate.toLocaleDateString('en-IN', { month: 'long', year: 'numeric' }),
                 status: 'Pending'
             };
         } else if (settleMode === 'Custom') {
@@ -132,9 +148,9 @@ const MonthlySettlement = () => {
                             onChange={(e) => setSelectedMonth(e.target.value)}
                             className="bg-transparent border-none text-text-main font-bold text-sm py-2.5 outline-none cursor-pointer"
                         >
-                            {Array.from({ length: 12 }).map((_, i) => {
+                            {Array.from({ length: 24 }).map((_, i) => {
                                 const d = new Date();
-                                d.setMonth(d.getMonth() + i - 3);
+                                d.setMonth(d.getMonth() + i - 12);
                                 const m = d.toLocaleDateString('en-IN', { month: 'long', year: 'numeric' });
                                 return <option key={m} value={m} className="bg-primary">{m}</option>;
                             })}
@@ -171,10 +187,10 @@ const MonthlySettlement = () => {
                         ),
                         exposure: `₹${loan.principalAmount}`,
                         interest: (
-                            <span className="text-accent">₹${loan.interest}</span>
+                            <span className="text-accent">₹{loan.interest}</span>
                         ),
                         terminal: (
-                            <span className="font-black text-text-main">₹${loan.totalAmount}</span>
+                            <span className="font-black text-text-main">₹{loan.totalAmount}</span>
                         ),
                         dueDate: (
                             <span className="text-text-muted font-medium">{new Date(loan.dueDate).toLocaleDateString()}</span>
@@ -194,7 +210,7 @@ const MonthlySettlement = () => {
                                 </AnimatedButton>
                                 <button
                                     onClick={() => handleDelete(loan.id)}
-                                    className="p-2 text-text-muted hover:text-danger transition-colors group-hover:opacity-100 opacity-0"
+                                    className="p-2 text-text-muted hover:text-danger transition-colors"
                                 >
                                     <Trash2 size={16} />
                                 </button>

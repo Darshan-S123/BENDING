@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { FileText, Download, Calendar, Trash2, ShieldCheck, ArrowRight } from 'lucide-react';
-import { formatCurrency } from '../utils/loanStore';
+import { FileText, Download, Calendar, Trash2, ShieldCheck } from 'lucide-react';
+import { formatCurrency, getReports, clearReports, getLoans } from '../utils/loanStore';
+import { generateSettlementPDF } from '../utils/pdfGenerator';
 import PageWrapper from '../components/PageWrapper';
 import AnimatedCard from '../components/AnimatedCard';
 import AnimatedButton from '../components/AnimatedButton';
@@ -9,15 +10,29 @@ const Reports = () => {
     const [history, setHistory] = useState([]);
 
     useEffect(() => {
-        const data = JSON.parse(localStorage.getItem('bending_reports') || '[]');
-        setHistory([...data].reverse());
+        const fetchReports = async () => {
+            const data = await getReports();
+            setHistory(data);
+        };
+        fetchReports();
     }, []);
 
-    const handleClear = () => {
+    const handleClear = async () => {
         if (window.confirm("Are you sure you want to clear all report history? This action cannot be undone.")) {
-            localStorage.removeItem('bending_reports');
+            await clearReports();
             setHistory([]);
         }
+    };
+
+    const handleDownloadReport = async (report) => {
+        // Fetch only COMPLETED loans for that settlement month to re-generate PDF
+        const allLoans = await getLoans();
+        const monthLoans = allLoans.filter(l => l.settlementMonth === report.month && l.status === 'Completed');
+        if (monthLoans.length === 0) {
+            alert(`No completed settlement data found for ${report.month}. The report may have been generated before data was migrated.`);
+            return;
+        }
+        generateSettlementPDF(report.month, monthLoans);
     };
 
     return (
@@ -70,8 +85,13 @@ const Reports = () => {
                                 </div>
                             </div>
 
-                            <AnimatedButton variant="secondary" fullWidth icon={Download} disabled className="opacity-40 grayscale">
-                                SECURED ARCHIVE
+                            <AnimatedButton
+                                variant="secondary"
+                                fullWidth
+                                icon={Download}
+                                onClick={() => handleDownloadReport(report)}
+                            >
+                                Download PDF
                             </AnimatedButton>
                         </div>
                         <div className="h-1 w-full bg-accent/20 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500" />

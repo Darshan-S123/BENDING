@@ -45,8 +45,8 @@ const CustomerOverview = () => {
     };
 
     const filteredLoans = loans.filter(loan =>
-        loan.customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        loan.phone.includes(searchTerm)
+        (loan.customerName || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (loan.phone || '').includes(searchTerm)
     );
 
     return (
@@ -88,7 +88,11 @@ const CustomerOverview = () => {
                                             </p>
                                         </div>
                                     </div>
-                                    <span className={`px-2 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest ${loan.status === 'Paid' ? 'bg-success/20 text-success' : 'bg-accent/20 text-accent'
+                                    <span className={`px-2 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest ${
+                                        loan.status === 'Completed' || loan.status === 'Paid' ? 'bg-success/20 text-success' :
+                                        loan.status === 'Overdue' ? 'bg-danger/20 text-danger' :
+                                        loan.status === 'Draft' ? 'bg-white/10 text-text-muted' :
+                                        'bg-accent/20 text-accent'
                                         }`}>
                                         {loan.status}
                                     </span>

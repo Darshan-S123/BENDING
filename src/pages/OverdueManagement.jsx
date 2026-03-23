@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getLoans, saveLoan, updateLoan, formatCurrency } from '../utils/loanStore';
+import { getLoans, saveLoan, updateLoan, formatCurrency, calculateInterest, addToLedger } from '../utils/loanStore';
 import { AlertCircle, ArrowRightCircle, Plus, ShieldAlert, History, TrendingUp, ShieldX, Zap } from 'lucide-react';
 import PageWrapper from '../components/PageWrapper';
 import AnimatedCard from '../components/AnimatedCard';
@@ -25,6 +25,16 @@ const OverdueManagement = () => {
 
         const newDueDate = new Date(loan.dueDate);
         newDueDate.setMonth(newDueDate.getMonth() + 1);
+        const newDueDateStr = newDueDate.toISOString().split('T')[0];
+
+        const newInterest = calculateInterest(
+            newPrincipal,
+            loan.interestRate,
+            loan.interestType,
+            loan.dueDate,
+            newDueDateStr,
+            loan.interestBasis
+        );
 
         // Mark old loan as Overdue
         await updateLoan(loan.id, { status: 'Overdue' });
@@ -34,14 +44,23 @@ const OverdueManagement = () => {
             ...loan,
             id: Date.now(),
             principalAmount: newPrincipal.toFixed(2),
-            interest: (newPrincipal * (parseFloat(loan.interestRate) / 100)).toFixed(2),
-            totalAmount: (newPrincipal * (1 + parseFloat(loan.interestRate) / 100)).toFixed(2),
+            interest: newInterest.toFixed(2),
+            totalAmount: (newPrincipal + newInterest).toFixed(2),
             borrowDate: loan.dueDate,
-            dueDate: newDueDate.toISOString().split('T')[0],
+            dueDate: newDueDateStr,
             settlementMonth: newDueDate.toLocaleDateString('en-IN', { month: 'long', year: 'numeric' }),
             status: 'Pending'
         };
         await saveLoan(forwardLoan);
+
+        // Add audit trail entry
+        await addToLedger({
+            customerName: loan.customerName,
+            amount: penalty,
+            type: 'Carry Forward',
+            category: 'Penalty',
+            status: 'Completed'
+        });
 
         const allLoans = await getLoans();
         const today = new Date();

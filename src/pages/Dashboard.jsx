@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { getLoans, formatCurrency } from '../utils/loanStore';
-import { TrendingUp, Users, Wallet, IndianRupee, ArrowUpRight, BarChart3, PieChart as PieChartIcon, Activity } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { getLoans, formatCurrency, exportLedgerCSV } from '../utils/loanStore';
+import { TrendingUp, Users, Wallet, ArrowUpRight, BarChart3, PieChart as PieChartIcon, Activity, Download } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, BarChart, Bar, ResponsiveContainer, Cell } from 'recharts';
 import PageWrapper from '../components/PageWrapper';
 import AnimatedCard from '../components/AnimatedCard';
@@ -9,6 +10,7 @@ import ChartCard from '../components/ChartCard';
 import AnimatedTable from '../components/AnimatedTable';
 
 const Dashboard = () => {
+    const navigate = useNavigate();
     const [loans, setLoans] = useState([]);
     const [stats, setStats] = useState({
         totalPrincipal: 0,
@@ -17,36 +19,52 @@ const Dashboard = () => {
         overdueLoans: 0
     });
 
+    const [collectionData, setCollectionData] = useState([]);
+    const [profitData, setProfitData] = useState([]);
+
     useEffect(() => {
-        const data = getLoans();
-        setLoans(data);
+        const fetchData = async () => {
+            const data = await getLoans();
+            setLoans(data);
 
-        const calculated = data.reduce((acc, loan) => {
-            acc.totalPrincipal += parseFloat(loan.principalAmount || 0);
-            acc.totalInterest += parseFloat(loan.interest || 0);
-            if (loan.status === 'Pending') acc.activeLoans++;
-            if (loan.status === 'Overdue') acc.overdueLoans++;
-            return acc;
-        }, { totalPrincipal: 0, totalInterest: 0, activeLoans: 0, overdueLoans: 0 });
+            const calculated = data.reduce((acc, loan) => {
+                if (loan.status === 'Draft') return acc;
+                acc.totalPrincipal += parseFloat(loan.principalAmount || 0);
+                acc.totalInterest += parseFloat(loan.interest || 0);
+                if (loan.status === 'Pending') acc.activeLoans++;
+                if (loan.status === 'Overdue') acc.overdueLoans++;
+                return acc;
+            }, { totalPrincipal: 0, totalInterest: 0, activeLoans: 0, overdueLoans: 0 });
 
-        setStats(calculated);
+            setStats(calculated);
+
+            // Build chart data from real loans grouped by settlementMonth
+            const monthlyMap = {};
+            data.forEach(loan => {
+                if (loan.status === 'Draft' || !loan.settlementMonth) return;
+                const m = loan.settlementMonth;
+                if (!monthlyMap[m]) monthlyMap[m] = { month: m, revenue: 0, interest: 0, profit: 0 };
+                monthlyMap[m].revenue += parseFloat(loan.principalAmount || 0);
+                monthlyMap[m].interest += parseFloat(loan.interest || 0);
+                if (loan.status === 'Completed') {
+                    monthlyMap[m].profit += parseFloat(loan.interest || 0);
+                }
+            });
+
+            // Sort by date and take the last 6 months with data
+            const sortedMonths = Object.values(monthlyMap).sort((a, b) => {
+                return new Date(a.month) - new Date(b.month);
+            });
+            const last6 = sortedMonths.slice(-6).map(m => ({
+                ...m,
+                month: m.month.split(' ')[0].slice(0, 3), // "January 2025" -> "Jan"
+            }));
+
+            setCollectionData(last6);
+            setProfitData(last6.filter(m => m.profit > 0).map(({ month, profit }) => ({ month, profit })));
+        };
+        fetchData();
     }, []);
-
-    const collectionData = [
-        { month: 'Jan', revenue: 4200, interest: 2100 },
-        { month: 'Feb', revenue: 3800, interest: 1900 },
-        { month: 'Mar', revenue: 5600, interest: 2800 },
-        { month: 'Apr', revenue: 4900, interest: 2450 },
-        { month: 'May', revenue: 7200, interest: 3600 },
-        { month: 'Jun', revenue: 8500, interest: 4250 },
-    ];
-
-    const profitData = [
-        { month: 'Mar', profit: 2800 },
-        { month: 'Apr', profit: 2450 },
-        { month: 'May', profit: 3600 },
-        { month: 'Jun', profit: 4250 },
-    ];
 
     return (
         <PageWrapper>
@@ -59,7 +77,11 @@ const Dashboard = () => {
                     </p>
                 </div>
                 <div className="flex gap-3">
-                    <button className="px-5 py-2.5 bg-accent/10 text-accent rounded-xl text-xs font-black uppercase tracking-widest border border-accent/20 hover:bg-accent hover:text-primary transition-all">
+                    <button
+                        onClick={() => exportLedgerCSV()}
+                        className="flex items-center gap-2 px-5 py-2.5 bg-accent/10 text-accent rounded-xl text-xs font-black uppercase tracking-widest border border-accent/20 hover:bg-accent hover:text-primary transition-all"
+                    >
+                        <Download size={14} />
                         Export Ledger
                     </button>
                 </div>
@@ -146,18 +168,22 @@ const Dashboard = () => {
             <div className="mb-10">
                 <div className="flex items-center justify-between mb-6">
                     <h3 className="text-xl font-black text-text-main tracking-tight">Recent Disbursements</h3>
-                    <button className="text-accent text-xs font-black uppercase tracking-widest hover:underline px-4 py-2 bg-accent/5 rounded-lg transition-all">
+                    <button
+                        onClick={() => navigate('/loans')}
+                        className="text-accent text-xs font-black uppercase tracking-widest hover:underline px-4 py-2 bg-accent/5 rounded-lg transition-all"
+                    >
                         View All Records
                     </button>
                 </div>
                 <AnimatedCard className="p-0 overflow-hidden" noHover>
                     <AnimatedTable
                         headers={['Customer', 'Principal', 'Interest', 'Maturity', 'Status']}
-                        data={loans.slice(0, 5)}
+                        data={loans.filter(l => l.status !== 'Draft').slice(0, 5)}
+                        emptyMessage="No disbursements yet"
                         renderRow={(loan) => ({
                             customer: (
                                 <div className="flex items-center gap-3">
-                                    <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-[10px] uppercase font-black">{loan.customerName[0]}</div>
+                                    <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-[10px] uppercase font-black">{(loan.customerName || '?')[0]}</div>
                                     <span className="truncate max-w-[150px]">{loan.customerName}</span>
                                 </div>
                             ),
@@ -167,7 +193,7 @@ const Dashboard = () => {
                             ),
                             maturity: loan.dueDate,
                             status: (
-                                <span className={`px-2 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest ${loan.status === 'Paid' ? 'bg-success/20 text-success' :
+                                <span className={`px-2 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest ${loan.status === 'Completed' ? 'bg-success/20 text-success' :
                                     loan.status === 'Overdue' ? 'bg-danger/20 text-danger' :
                                         'bg-accent-secondary/20 text-accent-secondary'
                                     }`}>

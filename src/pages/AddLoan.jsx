@@ -5,7 +5,7 @@ import PageWrapper from '../components/PageWrapper';
 import AnimatedCard from '../components/AnimatedCard';
 import AnimatedButton from '../components/AnimatedButton';
 import Counter from '../components/Counter';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 
 const AddLoan = () => {
     const navigate = useNavigate();
@@ -31,6 +31,17 @@ const AddLoan = () => {
             });
         }
     }, [location.state]);
+
+    const liveInterest = useMemo(() => {
+        if (!formData.principalAmount || !formData.dueDate || !formData.borrowDate) return 0;
+        return calculateInterest(
+            formData.principalAmount, formData.interestRate, formData.interestType,
+            formData.borrowDate, formData.dueDate, formData.interestBasis
+        );
+    }, [formData.principalAmount, formData.interestRate, formData.interestType,
+        formData.borrowDate, formData.dueDate, formData.interestBasis]);
+
+    const liveTotal = parseFloat(formData.principalAmount || 0) + liveInterest;
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -209,14 +220,14 @@ const AddLoan = () => {
 
                         <div className="space-y-6 mb-12">
                             <SummaryRow label="Principal Injection" value={formData.principalAmount ? `₹${formData.principalAmount}` : '₹0'} />
-                            <SummaryRow label="Interest Configuration" value={`${formData.interestRate}% / ${formData.interestBasis}`} />
-                            <SummaryRow label="Calculation Logic" value={formData.interestType} active />
+                            <SummaryRow label="Interest Accrual" value={liveInterest > 0 ? `₹${liveInterest.toFixed(2)}` : '—'} />
+                            <SummaryRow label="Interest Config" value={`${formData.interestRate}% ${formData.interestBasis} (${formData.interestType})`} active />
 
                             <div className="pt-6 border-t border-white/5">
                                 <div className="flex justify-between items-end">
                                     <span className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">Expected Terminal Value</span>
                                     <div className="text-3xl font-black text-accent tracking-tighter">
-                                        <Counter value={formData.principalAmount || 0} prefix="₹" />
+                                        <Counter value={liveTotal} prefix="₹" />
                                     </div>
                                 </div>
                             </div>
