@@ -88,7 +88,7 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
                             className="flex flex-col"
                         >
                             <span className="font-serif font-semibold text-2xl text-text-main leading-none">SS Finance</span>
-                            <span className="text-[9px] font-semibold text-text-muted tracking-[.2em] uppercase mt-1">Private Banking</span>
+                            <span className="text-[9px] font-semibold text-text-muted tracking-[.2em] uppercase mt-1">Mettupalayam</span>
                         </motion.div>
                     )}
                 </AnimatePresence>
