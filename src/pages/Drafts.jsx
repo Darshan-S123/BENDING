@@ -28,7 +28,7 @@ const Drafts = () => {
         <PageWrapper>
             <div className="space-y-8">
                 <header>
-                    <h1 className="text-4xl font-black text-white tracking-tight">Drafts</h1>
+                    <h1 className="text-4xl font-black text-text-main tracking-tight">Drafts</h1>
                     <p className="text-text-muted mt-1 font-medium">Review and finalize pending loan disbursements.</p>
                 </header>
 
@@ -40,7 +40,7 @@ const Drafts = () => {
                             key={draft.id}
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
-                            className="p-6 bg-secondary/20 rounded-2xl border border-white/5 space-y-4 hover:border-accent/30 transition-all group"
+                            className="p-6 bg-surface rounded-2xl border border-border space-y-4 hover:border-accent/30 transition-all group shadow-premium"
                         >
                             <div className="flex justify-between items-start">
                                 <div className="w-10 h-10 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center text-accent">
@@ -69,7 +69,7 @@ const Drafts = () => {
                             </button>
                         </motion.div>
                     )) : (
-                        <div className="col-span-full py-20 text-center bg-secondary/10 rounded-3xl border border-dashed border-white/10">
+                        <div className="col-span-full py-20 text-center bg-surface rounded-3xl border border-dashed border-border shadow-premium">
                             <FileText size={40} className="mx-auto text-text-muted/30 mb-4" />
                             <p className="text-text-muted font-bold">No draft transactions detected.</p>
                         </div>

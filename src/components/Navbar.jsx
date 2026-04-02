@@ -1,8 +1,10 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Search, Bell, User, Calendar } from 'lucide-react';
+import { Search, Bell, User, Calendar, Moon, Sun } from 'lucide-react';
+import { useTheme } from '../context/ThemeContext.jsx';
 
 const Navbar = () => {
+    const { theme, toggleTheme } = useTheme();
     const currentMonth = new Date().toLocaleDateString('en-IN', { month: 'long', year: 'numeric' });
 
     return (
@@ -12,11 +14,11 @@ const Navbar = () => {
             className="sticky top-0 w-full h-[var(--header-h)] bg-background/50 backdrop-blur-xl border-b border-border z-40 px-8 flex items-center justify-between"
         >
             <div className="flex items-center gap-12">
-                <div className="flex flex-col">
-                    <h2 className="text-text-main font-black text-xl tracking-tight">System Terminal</h2>
-                    <p className="text-text-muted text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5 mt-0.5">
-                        <span className="w-1.5 h-1.5 bg-accent rounded-full animate-pulse" />
-                        Active Session
+                <div className="flex flex-col justify-center">
+                    <h2 className="text-text-main font-black text-xl tracking-tight leading-none">System Terminal</h2>
+                    <p className="text-text-muted text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5 mt-1.5 leading-none">
+                        <span className="w-1.5 h-1.5 bg-accent rounded-full animate-pulse flex-shrink-0" />
+                        <span className="translate-y-[0.5px]">Active Session</span>
                     </p>
                 </div>
 
@@ -26,7 +28,7 @@ const Navbar = () => {
                     <input
                         type="text"
                         placeholder="Search records, members, or analytics..."
-                        className="bg-white/5 border border-white/5 rounded-xl pl-12 pr-4 py-2.5 w-80 text-sm focus:border-accent/30 outline-none transition-all placeholder:text-text-muted/50 font-medium"
+                        className="bg-surface border border-border rounded-xl pl-12 pr-4 py-2.5 w-80 text-sm focus:border-accent/30 outline-none transition-all placeholder:text-text-muted/50 font-medium"
                     />
                 </div>
             </div>
@@ -40,7 +42,10 @@ const Navbar = () => {
 
                 {/* Action Icons */}
                 <div className="flex items-center gap-2">
-                    <button className="p-2.5 text-text-muted hover:text-text-main hover:bg-white/5 rounded-xl transition-all relative">
+                    <button onClick={toggleTheme} className="p-2.5 text-text-muted hover:text-text-main hover:bg-surface rounded-xl transition-all relative">
+                        {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+                    </button>
+                    <button className="p-2.5 text-text-muted hover:text-text-main hover:bg-surface rounded-xl transition-all relative">
                         <Bell size={20} />
                         <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-accent border-2 border-background rounded-full" />
                     </button>

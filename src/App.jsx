@@ -14,6 +14,7 @@ import Drafts from './pages/Drafts.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 import MainLayout from './layout/MainLayout.jsx';
 import { AuthProvider, useAuth } from './context/AuthContext.jsx';
+import { ThemeProvider } from './context/ThemeContext.jsx';
 
 const AnimatedRoutes = () => {
   const { isAuthenticated } = useAuth();
@@ -44,9 +45,11 @@ const AnimatedRoutes = () => {
 const App = () => {
   return (
     <Router>
-      <AuthProvider>
-        <AnimatedRoutes />
-      </AuthProvider>
+      <ThemeProvider>
+        <AuthProvider>
+          <AnimatedRoutes />
+        </AuthProvider>
+      </ThemeProvider>
     </Router>
   );
 };

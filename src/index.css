@@ -1,64 +1,87 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
 @import "tailwindcss";
 
 @theme {
-  --color-primary: #0f172a;
-  --color-secondary: #1e293b;
-  --color-accent: #10b981;
-  --color-accent-secondary: #2563eb;
-  --color-background: #0f172a;
-  --color-surface: rgba(255, 255, 255, 0.05);
-  --color-border: rgba(255, 255, 255, 0.08);
-  --color-text-main: #f8fafc;
-  --color-text-muted: #cbd5f1;
-  --color-success: #10b981;
-  --color-danger: #ef4444;
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-accent: var(--accent);
+  --color-accent-secondary: var(--accent-secondary);
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-border: var(--border);
+  --color-text-main: var(--text-main);
+  --color-text-muted: var(--text-muted);
+  --color-success: var(--success);
+  --color-danger: var(--danger);
 
   --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+  --font-serif: "Playfair Display", Georgia, serif;
 
-  --radius-md: 12px;
-  --radius-lg: 16px;
+  --radius-md: 4px;
+  --radius-lg: 8px;
 
-  --shadow-premium: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
-  --shadow-accent: 0 4px 20px -2px rgba(16, 185, 129, 0.2);
+  --shadow-premium: var(--shadow-premium-val);
+  --shadow-accent: var(--shadow-accent-val);
 }
 
 :root {
-  /* Global CSS Variable Mappings for Component Compatibility */
-  --primary: var(--color-primary);
-  --secondary: var(--color-secondary);
-  --accent: var(--color-accent);
-  --accent-secondary: var(--color-accent-secondary);
-  --background: var(--color-background);
-  --text-main: var(--color-text-main);
-  --text-muted: var(--color-text-muted);
-  --success: var(--color-success);
-  --danger: var(--color-danger);
+  --primary: #ffffff;
+  --secondary: #f4f3f1;
+  --accent: #b89052;
+  --accent-secondary: #0ea5e9;
+  --background: #fcfbf9;
+  --surface: #ffffff;
+  --border: #ebeceb;
+  --text-main: #111111;
+  --text-muted: #737373;
+  --success: #10b981;
+  --danger: #ef4444;
+
+  --shadow-premium-val: 0 4px 20px -4px rgba(0, 0, 0, 0.03);
+  --shadow-accent-val: 0 4px 24px -4px rgba(184, 144, 82, 0.2);
 
   --sidebar-expanded: 240px;
   --sidebar-collapsed: 80px;
   --header-h: 70px;
 }
 
+.dark {
+  --primary: #111111;
+  --secondary: #1a1a1a;
+  --accent: #d4af37;
+  --accent-secondary: #0ea5e9;
+  --background: #050505;
+  --surface: #0a0a0a;
+  --border: #2a2a2a;
+  --text-main: #fcfbf9;
+  --text-muted: #a3a3a3;
+  --success: #10b981;
+  --danger: #ef4444;
+
+  --shadow-premium-val: 0 4px 20px -4px rgba(0, 0, 0, 0.5);
+  --shadow-accent-val: 0 4px 24px -4px rgba(212, 175, 55, 0.2);
+}
+
 @layer base {
   body {
-    @apply bg-background text-text-main font-sans antialiased;
+    @apply bg-background text-text-main font-serif antialiased;
     line-height: 1.5;
   }
 }
 
 @layer components {
   .glass-card {
-    @apply bg-surface border border-border backdrop-blur-md;
+    @apply bg-surface border border-border relative overflow-hidden;
     box-shadow: var(--shadow-premium);
   }
 
   .btn-premium {
-    @apply relative overflow-hidden transition-all duration-300 active:scale-95;
+    @apply relative overflow-hidden transition-all duration-300 active:scale-95 border border-border;
   }
 
   .btn-premium::after {
     content: '';
-    @apply absolute inset-0 opacity-0 transition-opacity duration-300 bg-white/10;
+    @apply absolute inset-0 opacity-0 transition-opacity duration-300 bg-black/5;
   }
 
   .btn-premium:hover::after {

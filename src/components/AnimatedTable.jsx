@@ -12,12 +12,12 @@ const AnimatedTable = ({ headers, data, renderRow, className = "", emptyMessage 
             className={`overflow-x-auto w-full ${className}`}
         >
             <table className="w-full border-collapse">
-                <thead className="bg-white/5 border-y border-border">
+                <thead className="bg-background border-y border-border">
                     <tr>
                         {headers.map((header, i) => (
                             <th
                                 key={i}
-                                className="px-6 py-4 text-left text-[10px] font-black text-text-muted uppercase tracking-[0.2em]"
+                                className="px-6 py-4 text-left text-[11px] font-semibold text-text-muted uppercase tracking-wider"
                             >
                                 {header}
                             </th>
@@ -29,10 +29,10 @@ const AnimatedTable = ({ headers, data, renderRow, className = "", emptyMessage 
                         <motion.tr
                             key={item.id || index}
                             variants={fadeInUp}
-                            className="group hover:bg-white/[0.02] transition-colors"
+                            className="group hover:bg-background transition-colors"
                         >
                             {Object.values(renderRow(item)).map((cell, idx) => (
-                                <td key={idx} className="px-6 py-4 text-sm font-bold text-text-main">
+                                <td key={idx} className="px-6 py-4 text-sm font-medium text-text-main">
                                     {cell}
                                 </td>
                             ))}

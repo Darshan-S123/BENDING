@@ -75,11 +75,11 @@ const Reports = () => {
                             </p>
 
                             <div className="grid grid-cols-2 gap-4 mb-8">
-                                <div className="p-4 bg-white/5 rounded-2xl border border-white/5 group-hover:border-accent/20 transition-colors">
+                                <div className="p-4 bg-surface rounded-2xl border border-border group-hover:border-accent/20 transition-colors">
                                     <div className="text-[9px] font-black text-text-muted uppercase tracking-[0.2em] mb-1">Entities</div>
                                     <div className="text-lg font-black text-text-main">{report.members}</div>
                                 </div>
-                                <div className="p-4 bg-white/5 rounded-2xl border border-white/5 group-hover:border-accent/20 transition-colors">
+                                <div className="p-4 bg-surface rounded-2xl border border-border group-hover:border-accent/20 transition-colors">
                                     <div className="text-[9px] font-black text-text-muted uppercase tracking-[0.2em] mb-1">Aggregate</div>
                                     <div className="text-lg font-black text-accent">{formatCurrency(report.total)}</div>
                                 </div>
@@ -98,7 +98,7 @@ const Reports = () => {
                     </AnimatedCard>
                 )) : (
                     <div className="col-span-full py-32 flex flex-col items-center justify-center">
-                        <div className="w-24 h-24 bg-white/5 rounded-full flex items-center justify-center text-text-muted/20 mb-8 border border-white/5">
+                        <div className="w-24 h-24 bg-surface rounded-full flex items-center justify-center text-text-muted/20 mb-8 border border-border">
                             <Calendar size={48} />
                         </div>
                         <h3 className="text-2xl font-black text-text-main mb-2 tracking-tight">Vault Empty</h3>

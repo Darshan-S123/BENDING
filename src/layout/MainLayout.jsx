@@ -8,12 +8,9 @@ const MainLayout = ({ children }) => {
 
     return (
         <div className="flex min-h-screen bg-background text-text-main overflow-hidden">
-            {/* Dynamic Background Elements */}
-            <div className="fixed inset-0 overflow-hidden pointer-events-none">
-                <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-accent/10 blur-[120px] rounded-full" />
-                <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-accent-secondary/10 blur-[120px] rounded-full" />
+            {/* Solid Clean Luxury Background */}
+            <div className="fixed inset-0 overflow-hidden pointer-events-none bg-background">
             </div>
-
             <Sidebar collapsed={collapsed} setCollapsed={setCollapsed} />
 
             <main className="flex-1 flex flex-col relative">

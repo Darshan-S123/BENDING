@@ -26,12 +26,12 @@ const Ledger = () => {
             <div className="space-y-8">
                 <header className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div>
-                        <h1 className="text-4xl font-black text-white tracking-tight">Ledger</h1>
+                        <h1 className="text-4xl font-black text-text-main tracking-tight">Ledger</h1>
                         <p className="text-text-muted mt-1 font-medium">Transaction history and financial audit log.</p>
                     </div>
 
                     <div className="flex items-center gap-3">
-                        <div className="flex items-center gap-3 bg-white/5 px-4 py-2 rounded-xl border border-white/5 focus-within:border-accent/30 transition-all">
+                        <div className="flex items-center gap-3 bg-surface px-4 py-2 rounded-xl border border-border focus-within:border-accent/30 transition-all">
                             <Search size={18} className="text-text-muted" />
                             <input
                                 type="text"
@@ -44,7 +44,7 @@ const Ledger = () => {
                         <button
                             onClick={() => exportLedgerCSV()}
                             title="Download as CSV"
-                            className="p-2.5 bg-secondary hover:bg-white/10 rounded-xl text-text-main border border-white/5 transition-all"
+                            className="p-2.5 bg-secondary hover:bg-secondary rounded-xl text-text-main border border-border transition-all"
                         >
                             <Download size={20} />
                         </button>
@@ -55,7 +55,7 @@ const Ledger = () => {
                     <div className="overflow-x-auto">
                         <table className="w-full text-left">
                             <thead>
-                                <tr className="border-b border-white/5 text-[10px] uppercase tracking-[0.2em] font-black text-accent">
+                                <tr className="border-b border-border text-[10px] uppercase tracking-[0.2em] font-black text-accent">
                                     <th className="px-6 py-5">Date</th>
                                     <th className="px-6 py-5">Customer</th>
                                     <th className="px-6 py-5">Type</th>
@@ -70,7 +70,7 @@ const Ledger = () => {
                                         key={entry.id}
                                         initial={{ opacity: 0 }}
                                         animate={{ opacity: 1 }}
-                                        className="hover:bg-white/[0.02] transition-colors group"
+                                        className="hover:bg-surface transition-colors group"
                                     >
                                         <td className="px-6 py-4 text-sm text-text-muted">
                                             {new Date(entry.date).toLocaleDateString()}
@@ -101,7 +101,7 @@ const Ledger = () => {
                                             </span>
                                         </td>
                                         <td className="px-6 py-4">
-                                            <span className="px-2.5 py-1 bg-white/5 rounded-full text-[10px] font-black uppercase text-text-muted border border-white/5">
+                                            <span className="px-2.5 py-1 bg-surface rounded-full text-[10px] font-black uppercase text-text-muted border border-border">
                                                 {entry.status || 'Completed'}
                                             </span>
                                         </td>

@@ -141,7 +141,7 @@ const MonthlySettlement = () => {
                     </p>
                 </div>
                 <div className="flex gap-4">
-                    <div className="bg-white/5 border border-white/5 rounded-xl px-4 flex items-center gap-3">
+                    <div className="bg-surface border border-border rounded-xl px-4 flex items-center gap-3">
                         <Search size={18} className="text-text-muted" />
                         <select
                             value={selectedMonth}
@@ -178,7 +178,7 @@ const MonthlySettlement = () => {
                     renderRow={(loan) => ({
                         customer: (
                             <div className="flex items-center gap-3">
-                                <div className="w-9 h-9 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-[10px] uppercase font-black">{loan.customerName?.[0]}</div>
+                                <div className="w-9 h-9 rounded-xl bg-surface border border-border flex items-center justify-center text-[10px] uppercase font-black">{loan.customerName?.[0]}</div>
                                 <div className="flex flex-col">
                                     <span className="font-bold text-text-main leading-tight">{loan.customerName}</span>
                                     <span className="text-[10px] text-text-muted font-bold tracking-tighter">{loan.phone}</span>
@@ -224,7 +224,7 @@ const MonthlySettlement = () => {
             {settleModal && (
                 <div className="fixed inset-0 bg-background/80 backdrop-blur-md z-[100] flex items-center justify-center p-6">
                     <AnimatedCard className="w-full max-w-[550px] relative p-8" noHover>
-                        <button onClick={() => setSettleModal(null)} className="absolute top-6 right-6 p-2 text-text-muted hover:text-text-main rounded-xl hover:bg-white/5 transition-all">
+                        <button onClick={() => setSettleModal(null)} className="absolute top-6 right-6 p-2 text-text-muted hover:text-text-main rounded-xl hover:bg-surface transition-all">
                             <X size={20} />
                         </button>
 
@@ -233,7 +233,7 @@ const MonthlySettlement = () => {
                             <p className="text-text-muted text-xs font-bold uppercase tracking-widest mt-1">Beneficiary: {settleModal.customerName}</p>
                         </div>
 
-                        <div className="flex bg-white/5 p-1 rounded-2xl border border-white/5 mb-8">
+                        <div className="flex bg-surface p-1 rounded-2xl border border-border mb-8">
                             {['Full', 'Partial', 'Custom'].map((mode) => (
                                 <button
                                     key={mode}
@@ -254,7 +254,7 @@ const MonthlySettlement = () => {
                                         type="date"
                                         value={settleDate}
                                         onChange={(e) => setSettleDate(e.target.value)}
-                                        className="w-full bg-white/5 border border-white/5 rounded-xl px-4 py-3 text-sm focus:border-accent/30 outline-none font-bold"
+                                        className="w-full bg-surface border border-border rounded-xl px-4 py-3 text-sm focus:border-accent/30 outline-none font-bold"
                                     />
                                 </div>
 
@@ -266,7 +266,7 @@ const MonthlySettlement = () => {
                                             placeholder="0.00"
                                             value={customAmount}
                                             onChange={(e) => setCustomAmount(e.target.value)}
-                                            className="w-full bg-white/5 border border-white/5 rounded-xl px-4 py-3 text-sm focus:border-accent/30 outline-none font-bold"
+                                            className="w-full bg-surface border border-border rounded-xl px-4 py-3 text-sm focus:border-accent/30 outline-none font-bold"
                                             autoFocus
                                         />
                                     </div>
@@ -276,7 +276,7 @@ const MonthlySettlement = () => {
                             <div className="bg-accent/[0.03] rounded-2xl p-6 border border-accent/10">
                                 <SummaryRow label="Injected Principal" value={formatCurrency(settleModal.principalAmount)} />
                                 <SummaryRow label="Calculated Accrual" value={formatCurrency(calculateInterest(settleModal.principalAmount, settleModal.interestRate, settleModal.interestType, settleModal.borrowDate, settleDate, settleModal.interestBasis))} active />
-                                <div className="pt-4 mt-4 border-t border-white/5 flex justify-between items-end">
+                                <div className="pt-4 mt-4 border-t border-border flex justify-between items-end">
                                     <span className="text-[10px] font-black text-text-muted uppercase tracking-widest">Aggregate Terminal</span>
                                     <span className="text-2xl font-black text-text-main tracking-tight">
                                         {formatCurrency(parseFloat(settleModal.principalAmount) + calculateInterest(settleModal.principalAmount, settleModal.interestRate, settleModal.interestType, settleModal.borrowDate, settleDate, settleModal.interestBasis))}
@@ -298,7 +298,7 @@ const MonthlySettlement = () => {
 };
 
 const MiniStat = ({ title, value, prefix = "", icon: Icon, delay, highlight = false }) => (
-    <AnimatedCard delay={delay} className={`${highlight ? 'bg-accent text-primary' : 'bg-white/5'}`}>
+    <AnimatedCard delay={delay} className={`${highlight ? 'bg-accent text-primary' : 'bg-surface'}`}>
         <div className="flex items-center gap-4">
             <div className={`p-3 rounded-xl ${highlight ? 'bg-black/10 text-primary' : 'bg-accent/10 text-accent'}`}>
                 <Icon size={20} />

@@ -7,11 +7,11 @@ const ChartCard = ({ title, subtitle, children, icon: Icon, className = "" }) =>
         <AnimatedCard className={`flex flex-col h-[400px] ${className}`} noHover delay={0.2}>
             <div className="flex items-center justify-between mb-8">
                 <div>
-                    <h3 className="text-lg font-black text-text-main tracking-tight">{title}</h3>
-                    {subtitle && <p className="text-xs font-bold text-text-muted mt-1 uppercase tracking-widest">{subtitle}</p>}
+                    <h3 className="text-xl font-serif font-semibold text-text-main tracking-tight">{title}</h3>
+                    {subtitle && <p className="text-xs font-semibold text-text-muted mt-1 uppercase tracking-wider">{subtitle}</p>}
                 </div>
                 {Icon && (
-                    <div className="p-2.5 bg-accent/10 text-accent rounded-xl">
+                    <div className="p-2.5 bg-transparent text-accent border border-border rounded shadow-sm">
                         <Icon size={20} />
                     </div>
                 )}

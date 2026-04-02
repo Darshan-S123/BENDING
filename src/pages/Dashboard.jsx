@@ -70,8 +70,8 @@ const Dashboard = () => {
         <PageWrapper>
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10">
                 <div>
-                    <h1 className="text-3xl font-black text-text-main tracking-tight">Fintech Terminal</h1>
-                    <p className="text-text-muted text-sm font-bold flex items-center gap-2 mt-1 uppercase tracking-widest">
+                    <h1 className="text-4xl font-serif font-bold text-text-main tracking-tight">Fintech Terminal</h1>
+                    <p className="text-text-muted text-xs font-semibold flex items-center gap-2 mt-2 uppercase tracking-widest">
                         <Activity size={14} className="text-accent" />
                         Live Liquidity Monitor
                     </p>
@@ -79,7 +79,7 @@ const Dashboard = () => {
                 <div className="flex gap-3">
                     <button
                         onClick={() => exportLedgerCSV()}
-                        className="flex items-center gap-2 px-5 py-2.5 bg-accent/10 text-accent rounded-xl text-xs font-black uppercase tracking-widest border border-accent/20 hover:bg-accent hover:text-primary transition-all"
+                        className="flex items-center gap-2 px-5 py-2 bg-background text-text-main rounded text-xs font-semibold uppercase tracking-wider border border-border hover:bg-border transition-all"
                     >
                         <Download size={14} />
                         Export Ledger
@@ -130,34 +130,34 @@ const Dashboard = () => {
                     <AreaChart data={collectionData}>
                         <defs>
                             <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="5%" stopColor="#10B981" stopOpacity={0.3} />
-                                <stop offset="95%" stopColor="#10B981" stopOpacity={0} />
+                                <stop offset="5%" stopColor="#b89052" stopOpacity={0.15} />
+                                <stop offset="95%" stopColor="#b89052" stopOpacity={0} />
                             </linearGradient>
                         </defs>
-                        <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
-                        <XAxis dataKey="month" stroke="#94a3b8" fontSize={10} tickLine={false} axisLine={false} />
-                        <YAxis stroke="#94a3b8" fontSize={10} tickLine={false} axisLine={false} tickFormatter={(v) => `₹${v}`} />
+                        <CartesianGrid strokeDasharray="3 3" stroke="#ebeceb" vertical={false} />
+                        <XAxis dataKey="month" stroke="#737373" fontSize={10} tickLine={false} axisLine={false} />
+                        <YAxis stroke="#737373" fontSize={10} tickLine={false} axisLine={false} tickFormatter={(v) => `₹${v}`} />
                         <Tooltip
-                            contentStyle={{ backgroundColor: '#1e293b', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px' }}
-                            itemStyle={{ color: '#f8fafc', fontSize: '12px' }}
+                            contentStyle={{ backgroundColor: '#ffffff', border: '1px solid #ebeceb', borderRadius: '4px', boxShadow: '0 4px 20px -4px rgba(0, 0, 0, 0.05)' }}
+                            itemStyle={{ color: '#111111', fontSize: '12px' }}
                         />
-                        <Area type="monotone" dataKey="revenue" stroke="#10B981" fillOpacity={1} fill="url(#colorRevenue)" strokeWidth={3} />
-                        <Area type="monotone" dataKey="interest" stroke="#2563EB" fill="transparent" strokeWidth={2} strokeDasharray="5 5" />
+                        <Area type="monotone" dataKey="revenue" stroke="#b89052" fillOpacity={1} fill="url(#colorRevenue)" strokeWidth={3} />
+                        <Area type="monotone" dataKey="interest" stroke="#111111" fill="transparent" strokeWidth={2} strokeDasharray="5 5" />
                     </AreaChart>
                 </ChartCard>
 
                 <ChartCard title="Yield Expansion" subtitle="Profit Accrual Trends" icon={TrendingUp}>
                     <BarChart data={profitData}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
-                        <XAxis dataKey="month" stroke="#94a3b8" fontSize={10} tickLine={false} axisLine={false} />
-                        <YAxis stroke="#94a3b8" fontSize={10} tickLine={false} axisLine={false} />
+                        <CartesianGrid strokeDasharray="3 3" stroke="#ebeceb" vertical={false} />
+                        <XAxis dataKey="month" stroke="#737373" fontSize={10} tickLine={false} axisLine={false} />
+                        <YAxis stroke="#737373" fontSize={10} tickLine={false} axisLine={false} />
                         <Tooltip
-                            cursor={{ fill: 'rgba(255,255,255,0.05)' }}
-                            contentStyle={{ backgroundColor: '#1e293b', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px' }}
+                            cursor={{ fill: '#fcfbf9' }}
+                            contentStyle={{ backgroundColor: '#ffffff', border: '1px solid #ebeceb', borderRadius: '4px', boxShadow: '0 4px 20px -4px rgba(0, 0, 0, 0.05)' }}
                         />
-                        <Bar dataKey="profit" radius={[6, 6, 0, 0]}>
+                        <Bar dataKey="profit" radius={[2, 2, 0, 0]}>
                             {profitData.map((entry, index) => (
-                                <Cell key={`cell-${index}`} fill={index === profitData.length - 1 ? '#10B981' : '#1e293b'} stroke={index === profitData.length - 1 ? 'none' : '#334155'} />
+                                <Cell key={`cell-${index}`} fill={index === profitData.length - 1 ? '#b89052' : '#ebeceb'} stroke="none" />
                             ))}
                         </Bar>
                     </BarChart>
@@ -167,10 +167,10 @@ const Dashboard = () => {
             {/* Recent Table */}
             <div className="mb-10">
                 <div className="flex items-center justify-between mb-6">
-                    <h3 className="text-xl font-black text-text-main tracking-tight">Recent Disbursements</h3>
+                    <h3 className="text-2xl font-serif font-semibold text-text-main tracking-tight">Recent Disbursements</h3>
                     <button
                         onClick={() => navigate('/loans')}
-                        className="text-accent text-xs font-black uppercase tracking-widest hover:underline px-4 py-2 bg-accent/5 rounded-lg transition-all"
+                        className="text-text-main text-xs font-semibold uppercase tracking-wider hover:bg-border px-4 py-2 bg-background border border-border rounded transition-all"
                     >
                         View All Records
                     </button>
@@ -183,8 +183,8 @@ const Dashboard = () => {
                         renderRow={(loan) => ({
                             customer: (
                                 <div className="flex items-center gap-3">
-                                    <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-[10px] uppercase font-black">{(loan.customerName || '?')[0]}</div>
-                                    <span className="truncate max-w-[150px]">{loan.customerName}</span>
+                                    <div className="w-8 h-8 rounded bg-background border border-border flex items-center justify-center text-[10px] uppercase font-bold text-text-main">{(loan.customerName || '?')[0]}</div>
+                                    <span className="truncate max-w-[150px] font-medium text-text-main">{loan.customerName}</span>
                                 </div>
                             ),
                             principal: `₹${loan.principalAmount}`,
@@ -193,9 +193,9 @@ const Dashboard = () => {
                             ),
                             maturity: loan.dueDate,
                             status: (
-                                <span className={`px-2 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest ${loan.status === 'Completed' ? 'bg-success/20 text-success' :
-                                    loan.status === 'Overdue' ? 'bg-danger/20 text-danger' :
-                                        'bg-accent-secondary/20 text-accent-secondary'
+                                <span className={`px-2 py-1 rounded border text-[10px] font-semibold uppercase tracking-wider ${loan.status === 'Completed' ? 'bg-success/10 text-success border-success/20' :
+                                    loan.status === 'Overdue' ? 'bg-danger/10 text-danger border-danger/20' :
+                                        'bg-accent-secondary/10 text-accent-secondary border-accent-secondary/20'
                                     }`}>
                                     {loan.status}
                                 </span>
@@ -211,19 +211,18 @@ const Dashboard = () => {
 const StatCard = ({ title, value, prefix = "", trend, icon: Icon, delay, positive = true, isRisk = false, isRiskActive = false }) => (
     <AnimatedCard delay={delay} className="group">
         <div className="flex justify-between items-start mb-6">
-            <div className={`p-3 rounded-2xl ${isRisk ? 'bg-danger/10 text-danger' : 'bg-accent/10 text-accent'} group-hover:scale-110 transition-transform`}>
-                <Icon size={24} />
+            <div className={`p-3 rounded border ${isRisk ? 'bg-danger/5 text-danger border-danger/20' : 'bg-transparent text-accent border-border'} group-hover:scale-105 transition-transform`}>
+                <Icon size={20} />
             </div>
-            <div className={`flex items-center gap-1 text-[10px] font-black px-2 py-1 rounded-lg ${isRisk ? 'bg-danger/10 text-danger' :
-                positive ? 'bg-success/10 text-success' : 'bg-accent-secondary/10 text-accent-secondary'
-                }`}>
+            <div className={`flex items-center gap-1 text-[10px] font-semibold px-2 py-1 rounded border ${isRisk ? 'bg-danger/10 text-danger border-danger/20' :
+                positive ? 'bg-success/10 text-success border-success/20' : 'bg-background text-text-main border-border'}`}>
                 <ArrowUpRight size={12} className={!positive && 'rotate-90'} />
                 {trend}
             </div>
         </div>
         <div>
-            <p className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em] mb-1">{title}</p>
-            <div className={`text-3xl font-black ${isRiskActive ? 'text-danger' : 'text-text-main'} tracking-tighter`}>
+            <p className="text-[10px] font-semibold text-text-muted uppercase tracking-wider mb-1">{title}</p>
+            <div className={`text-2xl font-bold ${isRiskActive ? 'text-danger' : 'text-text-main'} tracking-tight`}>
                 <Counter value={value} prefix={prefix} />
             </div>
         </div>

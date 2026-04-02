@@ -152,7 +152,7 @@ const AddLoan = () => {
                                 <Wallet size={24} />
                             </div>
                             <div>
-                                <h3 className="text-xl font-black text-text-main tracking-tight text-white">Financial Structure</h3>
+                                <h3 className="text-xl font-black text-text-main tracking-tight">Financial Structure</h3>
                                 <p className="text-xs font-bold text-text-muted uppercase tracking-widest">Principal, Interest & Recurrence Logic</p>
                             </div>
                         </div>
@@ -223,7 +223,7 @@ const AddLoan = () => {
                             <SummaryRow label="Interest Accrual" value={liveInterest > 0 ? `₹${liveInterest.toFixed(2)}` : '—'} />
                             <SummaryRow label="Interest Config" value={`${formData.interestRate}% ${formData.interestBasis} (${formData.interestType})`} active />
 
-                            <div className="pt-6 border-t border-white/5">
+                            <div className="pt-6 border-t border-border">
                                 <div className="flex justify-between items-end">
                                     <span className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">Expected Terminal Value</span>
                                     <div className="text-3xl font-black text-accent tracking-tighter">
@@ -242,7 +242,7 @@ const AddLoan = () => {
                             </AnimatedButton>
                         </div>
 
-                        <div className="mt-8 p-4 bg-white/5 rounded-xl border border-white/5">
+                        <div className="mt-8 p-4 bg-surface rounded-xl border border-border">
                             <p className="text-[10px] text-text-muted font-bold leading-relaxed uppercase tracking-wider">
                                 Legal Notice: Confirmation triggers immediate ledger entry and generates a non-repudiable audit trail.
                             </p>
@@ -261,7 +261,7 @@ const InputField = ({ label, icon: Icon, suffix: Suffix, className = "", ...prop
             {Icon && <Icon size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-text-muted group-focus-within:text-accent transition-colors" />}
             <input
                 {...props}
-                className={`w-full bg-white/5 border border-white/5 rounded-xl py-3 text-sm focus:border-accent/30 outline-none transition-all placeholder:text-text-muted/30 font-bold
+                className={`w-full bg-surface border border-border rounded-xl py-3 text-sm focus:border-accent/30 outline-none transition-all placeholder:text-text-muted/30 font-bold
                     ${Icon ? 'pl-11' : 'px-4'}
                     ${Suffix ? 'pr-11' : 'pr-4'}
                 `}
@@ -276,7 +276,7 @@ const SelectField = ({ label, options, ...props }) => (
         <label className="block text-[10px] font-black text-text-muted uppercase tracking-[0.2em] mb-2">{label}</label>
         <select
             {...props}
-            className="w-full bg-white/5 border border-white/5 rounded-xl px-4 py-3 text-sm focus:border-accent/30 outline-none transition-all font-bold cursor-pointer hover:bg-white/10"
+            className="w-full bg-surface border border-border rounded-xl px-4 py-3 text-sm focus:border-accent/30 outline-none transition-all font-bold cursor-pointer hover:bg-secondary"
         >
             {options.map(opt => <option key={opt} value={opt} className="bg-primary">{opt}</option>)}
         </select>

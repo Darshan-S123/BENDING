@@ -68,7 +68,7 @@ const Login = () => {
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    background: radial-gradient(circle at center, #0f172a 0%, #020617 100%);
+                    background: var(--background);
                     position: fixed;
                     top: 0;
                     left: 0;
@@ -80,7 +80,9 @@ const Login = () => {
                     padding: 3rem;
                     border-radius: 2rem;
                     text-align: center;
-                    border: 1px solid rgba(255, 255, 255, 0.1);
+                    background: var(--surface);
+                    border: 1px solid var(--border);
+                    box-shadow: var(--shadow-premium);
                     animation: fadeIn 0.5s ease-out;
                 }
                 .shield-icon {
@@ -101,7 +103,7 @@ const Login = () => {
                     font-weight: 800;
                 }
                 .login-header p {
-                    color: var(--muted-foreground);
+                    color: var(--text-muted);
                     font-size: 0.875rem;
                     margin-bottom: 2.5rem;
                 }
@@ -118,11 +120,11 @@ const Login = () => {
                 }
                 .pin-input-group input {
                     width: 100%;
-                    background: rgba(255, 255, 255, 0.03);
-                    border: 1px solid var(--card-border);
+                    background: var(--background);
+                    border: 1px solid var(--border);
                     padding: 1rem 1rem 1rem 3rem;
                     border-radius: 0.75rem;
-                    color: white;
+                    color: var(--text-main);
                     font-size: 1.25rem;
                     letter-spacing: 0.5em;
                     text-align: center;
@@ -135,10 +137,11 @@ const Login = () => {
                 }
                 .login-btn {
                     width: 100%;
-                    background: var(--accent);
-                    color: var(--accent-foreground);
+                    background: var(--text-main);
+                    color: var(--surface);
                     padding: 1rem;
                     border-radius: 0.75rem;
+
                     font-weight: 700;
                     letter-spacing: 0.05em;
                     border: none;
@@ -162,7 +165,7 @@ const Login = () => {
                 .login-footer {
                     margin-top: 2.5rem;
                     font-size: 0.7rem;
-                    color: var(--muted-foreground);
+                    color: var(--text-muted);
                     opacity: 0.5;
                 }
                 @keyframes fadeIn {

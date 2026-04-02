@@ -5,7 +5,7 @@ import { exportAllDataJSON, importDataFromJSON, deleteAllLoans } from '../utils/
 import { useAuth } from '../context/AuthContext';
 
 const SettingSection = ({ icon: Icon, title, description, children }) => (
-    <div className="p-6 bg-secondary/20 rounded-2xl border border-white/5 space-y-4">
+    <div className="p-6 bg-secondary/20 rounded-2xl border border-border space-y-4">
         <div className="flex items-center gap-4">
             <div className="w-10 h-10 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center text-accent">
                 <Icon size={20} />
@@ -108,7 +108,7 @@ const Settings = () => {
             <div className="max-w-4xl mx-auto space-y-8">
                 <header className="flex items-center justify-between">
                     <div>
-                        <h1 className="text-4xl font-black text-white tracking-tight">Settings</h1>
+                        <h1 className="text-4xl font-black text-text-main tracking-tight">Settings</h1>
                         <p className="text-text-muted mt-1 font-medium">Manage your application preferences and security.</p>
                     </div>
                 </header>
@@ -119,7 +119,7 @@ const Settings = () => {
                         <div className="space-y-3">
                             <div className="flex flex-col gap-1">
                                 <label className="text-xs font-bold text-accent uppercase tracking-widest">Display Name</label>
-                                <input type="text" defaultValue="SS Finance Admin" className="bg-background border border-white/10 rounded-lg px-4 py-2 text-sm text-text-main outline-none focus:border-accent/50 transition-all" />
+                                <input type="text" defaultValue="SS Finance Admin" className="bg-background border border-border rounded-lg px-4 py-2 text-sm text-text-main outline-none focus:border-accent/50 transition-all" />
                             </div>
                         </div>
                     </SettingSection>
@@ -150,7 +150,7 @@ const Settings = () => {
                     <SettingSection icon={Upload} title="Import Data" description="Restore from a previous JSON backup.">
                         <button
                             onClick={handleImportJSON}
-                            className="flex items-center gap-2 px-4 py-2 bg-secondary/50 border border-white/10 rounded-lg text-sm font-bold hover:bg-white/5 transition-all text-text-main w-full justify-center"
+                            className="flex items-center gap-2 px-4 py-2 bg-secondary/50 border border-border rounded-lg text-sm font-bold hover:bg-border transition-all text-text-main w-full justify-center"
                         >
                             <Upload size={16} />
                             Import JSON Backup
@@ -161,14 +161,14 @@ const Settings = () => {
                 {/* Danger Zone */}
                 <div className="p-6 bg-danger/5 rounded-2xl border border-danger/10 mt-12">
                     <h3 className="text-lg font-bold text-danger mb-1">Danger Zone</h3>
-                    <p className="text-sm text-text-muted mb-6">Irreversible actions that affect your entire dataset. Type <code className="bg-white/10 px-1 rounded text-danger font-black">DELETE ALL</code> to confirm.</p>
+                    <p className="text-sm text-text-muted mb-6">Irreversible actions that affect your entire dataset. Type <code className="bg-secondary px-1 rounded text-danger font-black">DELETE ALL</code> to confirm.</p>
                     <div className="flex gap-3">
                         <input
                             type="text"
                             placeholder="Type DELETE ALL to confirm"
                             value={resetConfirmText}
                             onChange={(e) => setResetConfirmText(e.target.value)}
-                            className="flex-1 bg-background border border-white/10 rounded-lg px-4 py-2 text-sm text-text-main outline-none focus:border-danger/50 transition-all placeholder:text-text-muted/30"
+                            className="flex-1 bg-background border border-border rounded-lg px-4 py-2 text-sm text-text-main outline-none focus:border-danger/50 transition-all placeholder:text-text-muted/30"
                         />
                         <button
                             onClick={handleResetAll}
@@ -185,11 +185,11 @@ const Settings = () => {
             {/* Change PIN Modal */}
             {pinModal && (
                 <div className="fixed inset-0 bg-background/80 backdrop-blur-md z-[100] flex items-center justify-center p-6">
-                    <div className="w-full max-w-md bg-secondary/80 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-2xl">
+                    <div className="w-full max-w-md bg-surface border border-border rounded-3xl p-8 shadow-premium">
                         <div className="flex justify-between items-start mb-8">
                             <h3 className="text-2xl font-black text-text-main">Change Master PIN</h3>
                             <button onClick={() => { setPinModal(false); setPinError(''); setCurrentPin(''); setNewPin(''); setConfirmPin(''); }}
-                                className="p-2 text-text-muted hover:text-text-main rounded-xl hover:bg-white/5 transition-all">
+                                className="p-2 text-text-muted hover:text-text-main rounded-xl hover:bg-surface transition-all">
                                 <X size={20} />
                             </button>
                         </div>
@@ -225,7 +225,7 @@ const PinField = ({ label, value, onChange, show, onToggle }) => (
                 value={value}
                 onChange={e => onChange && onChange(e.target.value)}
                 maxLength={6}
-                className="w-full bg-white/5 border border-white/5 rounded-xl px-4 py-3 text-sm focus:border-accent/30 outline-none font-bold pr-10"
+                className="w-full bg-background border border-border rounded-xl px-4 py-3 text-sm focus:border-accent/30 outline-none font-bold pr-10 text-text-main"
             />
             {onToggle && (
                 <button type="button" onClick={onToggle} className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-main transition-colors">

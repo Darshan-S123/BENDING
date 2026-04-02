@@ -66,7 +66,7 @@ const CustomerOverview = () => {
                         placeholder="SEARCH ENTITY..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full lg:w-96 bg-white/5 border border-white/5 rounded-2xl pl-12 pr-4 py-3.5 text-xs font-black uppercase tracking-widest focus:border-accent/30 outline-none transition-all placeholder:text-text-muted/30"
+                        className="w-full lg:w-96 bg-surface border border-border rounded-2xl pl-12 pr-4 py-3.5 text-xs font-black uppercase tracking-widest focus:border-accent/30 outline-none transition-all placeholder:text-text-muted/30"
                     />
                 </div>
             </div>
@@ -78,7 +78,7 @@ const CustomerOverview = () => {
                             <div className="p-8">
                                 <div className="flex items-start justify-between mb-8">
                                     <div className="flex items-center gap-4">
-                                        <div className="w-14 h-14 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center text-accent group-hover:bg-accent group-hover:text-primary transition-all duration-500">
+                                        <div className="w-14 h-14 bg-surface border border-border rounded-2xl flex items-center justify-center text-accent group-hover:bg-accent group-hover:text-primary transition-all duration-500">
                                             <User size={28} />
                                         </div>
                                         <div>
@@ -91,7 +91,7 @@ const CustomerOverview = () => {
                                     <span className={`px-2 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest ${
                                         loan.status === 'Completed' || loan.status === 'Paid' ? 'bg-success/20 text-success' :
                                         loan.status === 'Overdue' ? 'bg-danger/20 text-danger' :
-                                        loan.status === 'Draft' ? 'bg-white/10 text-text-muted' :
+                                        loan.status === 'Draft' ? 'bg-secondary text-text-muted' :
                                         'bg-accent/20 text-accent'
                                         }`}>
                                         {loan.status}
@@ -104,13 +104,13 @@ const CustomerOverview = () => {
                                 </div>
 
                                 <div className="grid grid-cols-2 gap-4 mb-8">
-                                    <div className="p-4 bg-white/5 rounded-2xl border border-white/5 group-hover:bg-accent/[0.02] transition-colors">
+                                    <div className="p-4 bg-surface rounded-2xl border border-border group-hover:bg-accent/[0.02] transition-colors">
                                         <span className="block text-[9px] font-black text-text-muted uppercase tracking-widest mb-1">Exposure</span>
                                         <div className="text-lg font-black text-text-main">
                                             <Counter value={loan.principalAmount} prefix="₹" />
                                         </div>
                                     </div>
-                                    <div className="p-4 bg-white/5 rounded-2xl border border-white/5 group-hover:bg-accent/[0.02] transition-colors">
+                                    <div className="p-4 bg-surface rounded-2xl border border-border group-hover:bg-accent/[0.02] transition-colors">
                                         <span className="block text-[9px] font-black text-text-muted uppercase tracking-widest mb-1">Yield</span>
                                         <div className="text-lg font-black text-accent">
                                             <Counter value={loan.interest} prefix="₹" />
@@ -118,13 +118,13 @@ const CustomerOverview = () => {
                                     </div>
                                 </div>
 
-                                <div className="flex gap-3 pt-6 border-t border-white/5">
+                                <div className="flex gap-3 pt-6 border-t border-border">
                                     <AnimatedButton variant="secondary" fullWidth className="py-2.5 text-[10px]" onClick={() => handleEdit(loan)}>
                                         MANAGE ENTITY
                                     </AnimatedButton>
                                     <button
                                         onClick={() => handleDelete(loan.id)}
-                                        className="p-2.5 bg-white/5 border border-white/5 text-text-muted hover:text-danger hover:border-danger/30 rounded-xl transition-all"
+                                        className="p-2.5 bg-surface border border-border text-text-muted hover:text-danger hover:border-danger/30 rounded-xl transition-all"
                                     >
                                         <Trash2 size={18} />
                                     </button>
@@ -147,7 +147,7 @@ const CustomerOverview = () => {
                     <AnimatedCard className="w-full max-w-md p-8" noHover>
                         <div className="flex justify-between items-start mb-8">
                             <h3 className="text-2xl font-black text-text-main tracking-tight">Record Refactor</h3>
-                            <button onClick={() => setEditModal(null)} className="p-2 text-text-muted hover:text-text-main rounded-xl hover:bg-white/5 transition-all">
+                            <button onClick={() => setEditModal(null)} className="p-2 text-text-muted hover:text-text-main rounded-xl hover:bg-surface transition-all">
                                 <X size={20} />
                             </button>
                         </div>
@@ -158,7 +158,7 @@ const CustomerOverview = () => {
                                     type="text"
                                     value={editForm.customerName}
                                     onChange={(e) => setEditForm({ ...editForm, customerName: e.target.value })}
-                                    className="w-full bg-white/5 border border-white/5 rounded-xl px-4 py-3 text-sm focus:border-accent/30 outline-none font-bold"
+                                    className="w-full bg-surface border border-border rounded-xl px-4 py-3 text-sm focus:border-accent/30 outline-none font-bold"
                                 />
                             </div>
                             <div>
@@ -167,7 +167,7 @@ const CustomerOverview = () => {
                                     type="tel"
                                     value={editForm.phone}
                                     onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })}
-                                    className="w-full bg-white/5 border border-white/5 rounded-xl px-4 py-3 text-sm focus:border-accent/30 outline-none font-bold"
+                                    className="w-full bg-surface border border-border rounded-xl px-4 py-3 text-sm focus:border-accent/30 outline-none font-bold"
                                 />
                             </div>
                         </div>
@@ -182,7 +182,7 @@ const CustomerOverview = () => {
 };
 
 const ContactRow = ({ icon: Icon, label, value }) => (
-    <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-widest border-b border-white/[0.02] pb-2">
+    <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-widest border-b border-border pb-2">
         <div className="flex items-center gap-2 text-text-muted">
             <Icon size={12} className="text-accent" />
             <span>{label}</span>

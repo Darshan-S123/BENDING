@@ -17,20 +17,20 @@ import { sidebarTransition } from '../animations/variants';
 const NavItem = ({ icon: Icon, label, path, collapsed, active }) => (
     <Link to={path}>
         <motion.div
-            className={`flex items-center gap-4 px-4 py-3.5 rounded-xl cursor-pointer transition-all relative group
-        ${active ? 'bg-accent/10 text-accent' : 'text-text-muted hover:bg-white/5 hover:text-text-main'}
+            className={`flex items-center gap-4 px-4 py-3 rounded-md cursor-pointer transition-all relative group overflow-hidden
+        ${active ? 'bg-text-main text-background shadow-md' : 'text-text-muted hover:bg-background hover:text-text-main border border-transparent'}
       `}
-            whileHover={{ x: 5 }}
+            whileHover={{ x: 3 }}
             whileTap={{ scale: 0.98 }}
         >
-            <Icon size={22} className={active ? 'text-accent' : 'group-hover:text-text-main'} />
+            <Icon size={20} className={active ? 'text-accent' : 'group-hover:text-text-main'} />
             <AnimatePresence>
                 {!collapsed && (
                     <motion.span
                         initial={{ opacity: 0, x: -10 }}
                         animate={{ opacity: 1, x: 0 }}
                         exit={{ opacity: 0, x: -10 }}
-                        className="font-bold text-sm"
+                        className={`text-sm ${active ? 'font-semibold' : 'font-medium'}`}
                     >
                         {label}
                     </motion.span>
@@ -40,7 +40,7 @@ const NavItem = ({ icon: Icon, label, path, collapsed, active }) => (
             {active && (
                 <motion.div
                     layoutId="active-pill"
-                    className="absolute left-0 w-1 h-6 bg-accent rounded-r-full"
+                    className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-accent rounded-r-full"
                     transition={sidebarTransition}
                 />
             )}
@@ -71,13 +71,13 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
         <motion.aside
             initial={false}
             animate={{ width: collapsed ? 'var(--sidebar-collapsed)' : 'var(--sidebar-expanded)' }}
-            className="h-screen sticky top-0 bg-secondary/30 backdrop-blur-xl border-r border-border flex flex-col z-50 overflow-hidden"
+            className="h-screen sticky top-0 bg-surface border-r border-border flex flex-col z-50 overflow-hidden"
             transition={sidebarTransition}
         >
             {/* Logo Section */}
             <div className="p-6 flex items-center gap-3">
-                <div className="min-w-[32px] h-8 bg-gradient-to-tr from-accent to-accent-secondary rounded-lg flex items-center justify-center shadow-lg shadow-accent/20">
-                    <TrendingUp size={20} className="text-white" />
+                <div className="min-w-[32px] h-8 bg-transparent border border-border rounded flex items-center justify-center">
+                    <TrendingUp size={18} className="text-accent" />
                 </div>
                 <AnimatePresence>
                     {!collapsed && (
@@ -87,8 +87,8 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
                             exit={{ opacity: 0, x: -10 }}
                             className="flex flex-col"
                         >
-                            <span className="font-black text-lg tracking-tighter text-text-main leading-none">SS FINANCE</span>
-                            <span className="text-[10px] font-bold text-accent tracking-[.2em] uppercase">Enterprise</span>
+                            <span className="font-serif font-semibold text-2xl text-text-main leading-none">SS Finance</span>
+                            <span className="text-[9px] font-semibold text-text-muted tracking-[.2em] uppercase mt-1">Private Banking</span>
                         </motion.div>
                     )}
                 </AnimatePresence>
@@ -110,7 +110,7 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
             <div className="p-4 border-t border-border">
                 <button
                     onClick={() => setCollapsed(!collapsed)}
-                    className="w-full flex items-center justify-center p-3 text-text-muted hover:text-text-main hover:bg-white/5 rounded-xl transition-all"
+                    className="w-full flex items-center justify-center p-3 text-text-muted hover:text-text-main hover:bg-background rounded-md transition-all"
                 >
                     {collapsed ? <ChevronRight size={20} /> : <div className="flex items-center gap-3 font-bold text-xs uppercase tracking-widest"><ChevronLeft size={16} /> Minimize</div>}
                 </button>
