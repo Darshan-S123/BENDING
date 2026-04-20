@@ -227,7 +227,8 @@ const MonthlySettlement = () => {
                         )
                     })}
                 />
-            </motion.div>
+                    </AnimatedCard>
+                </motion.div>
 
             {/* Settle Modal */}
             <AnimatePresence>
