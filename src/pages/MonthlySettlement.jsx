@@ -320,6 +320,7 @@ const MonthlySettlement = () => {
                     </div>
                 )}
             </AnimatePresence>
+            </motion.div>
         </PageWrapper>
     );
 };
