@@ -40,7 +40,7 @@ const NavItem = ({ icon: Icon, label, path, collapsed, active }) => (
             {active && (
                 <motion.div
                     layoutId="active-pill"
-                    className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-accent rounded-r-full"
+                    className="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-8 bg-accent rounded-r-full glow-accent shadow-[0_0_15px_rgba(184,144,82,0.4)]"
                     transition={sidebarTransition}
                 />
             )}

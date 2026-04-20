@@ -8,6 +8,8 @@ import AnimatedCard from '../components/AnimatedCard';
 import Counter from '../components/Counter';
 import ChartCard from '../components/ChartCard';
 import AnimatedTable from '../components/AnimatedTable';
+import { staggerContainer, fadeInUp, premiumEasing } from '../animations/variants';
+import { motion } from 'framer-motion';
 
 const Dashboard = () => {
     const navigate = useNavigate();
@@ -38,7 +40,6 @@ const Dashboard = () => {
 
             setStats(calculated);
 
-            // Build chart data from real loans grouped by settlementMonth
             const monthlyMap = {};
             data.forEach(loan => {
                 if (loan.status === 'Draft' || !loan.settlementMonth) return;
@@ -51,13 +52,12 @@ const Dashboard = () => {
                 }
             });
 
-            // Sort by date and take the last 6 months with data
             const sortedMonths = Object.values(monthlyMap).sort((a, b) => {
                 return new Date(a.month) - new Date(b.month);
             });
             const last6 = sortedMonths.slice(-6).map(m => ({
                 ...m,
-                month: m.month.split(' ')[0].slice(0, 3), // "January 2025" -> "Jan"
+                month: m.month.split(' ')[0].slice(0, 3),
             }));
 
             setCollectionData(last6);
@@ -68,27 +68,32 @@ const Dashboard = () => {
 
     return (
         <PageWrapper>
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10">
-                <div>
-                    <h1 className="text-4xl font-serif font-bold text-text-main tracking-tight">Fintech Terminal</h1>
-                    <p className="text-text-muted text-xs font-semibold flex items-center gap-2 mt-2 uppercase tracking-widest">
-                        <Activity size={14} className="text-accent" />
-                        Live Liquidity Monitor
-                    </p>
-                </div>
-                <div className="flex gap-3">
-                    <button
-                        onClick={() => exportLedgerCSV()}
-                        className="flex items-center gap-2 px-5 py-2 bg-background text-text-main rounded text-xs font-semibold uppercase tracking-wider border border-border hover:bg-border transition-all"
-                    >
-                        <Download size={14} />
-                        Export Ledger
-                    </button>
-                </div>
-            </div>
+            <motion.div
+                variants={staggerContainer}
+                initial="initial"
+                animate="animate"
+                className="space-y-10"
+            >
+                <motion.div variants={fadeInUp} className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div>
+                        <h1 className="text-4xl font-serif font-bold text-text-main tracking-tight">Fintech Terminal</h1>
+                        <p className="text-text-muted text-xs font-semibold flex items-center gap-2 mt-2 uppercase tracking-widest">
+                            <Activity size={14} className="text-accent" />
+                            Live Liquidity Monitor
+                        </p>
+                    </div>
+                    <div className="flex gap-3">
+                        <button
+                            onClick={() => exportLedgerCSV()}
+                            className="flex items-center gap-2 px-5 py-2 bg-background text-text-main rounded text-xs font-semibold uppercase tracking-wider border border-border hover:bg-border transition-all"
+                        >
+                            <Download size={14} />
+                            Export Ledger
+                        </button>
+                    </div>
+                </motion.div>
 
-            {/* Summary Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+            <motion.div variants={fadeInUp} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <StatCard
                     title="Liquid Assets"
                     value={stats.totalPrincipal}
@@ -122,10 +127,10 @@ const Dashboard = () => {
                     isRisk
                     isRiskActive={stats.overdueLoans > 0}
                 />
-            </div>
+            </motion.div>
 
             {/* Charts Section */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-10">
+            <motion.div variants={fadeInUp} className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <ChartCard title="Capital Velocity" subtitle="Monthly Revenue vs Interest" icon={BarChart3}>
                     <AreaChart data={collectionData}>
                         <defs>
@@ -162,10 +167,10 @@ const Dashboard = () => {
                         </Bar>
                     </BarChart>
                 </ChartCard>
-            </div>
+            </motion.div>
 
             {/* Recent Table */}
-            <div className="mb-10">
+            <motion.div variants={fadeInUp}>
                 <div className="flex items-center justify-between mb-6">
                     <h3 className="text-2xl font-serif font-semibold text-text-main tracking-tight">Recent Disbursements</h3>
                     <button
@@ -203,8 +208,9 @@ const Dashboard = () => {
                         })}
                     />
                 </AnimatedCard>
-            </div>
-        </PageWrapper>
+            </motion.div>
+        </motion.div>
+    </PageWrapper>
     );
 };
 

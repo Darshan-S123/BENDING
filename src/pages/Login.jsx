@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Lock, ShieldCheck, AlertCircle } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Lock, ShieldCheck, AlertCircle, ArrowRight } from 'lucide-react';
+import FeatherBackground from '../components/FeatherBackground';
+import { premiumEasing, featherTransition, fadeInUp, staggerContainer } from '../animations/variants';
 
 const Login = () => {
     const [password, setPassword] = useState('');
@@ -11,7 +14,8 @@ const Login = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (login(password)) {
+        const success = login(password);
+        if (success) {
             navigate('/');
         } else {
             setError(true);
@@ -21,165 +25,90 @@ const Login = () => {
     };
 
     return (
-        <div className="login-container">
-            <div className={`glass login-card ${error ? 'shake' : ''}`}>
-                <div className="login-header">
-                    <div className="shield-icon">
-                        <ShieldCheck size={32} color="var(--accent)" />
-                    </div>
-                    <h1>SECURE ACCESS</h1>
-                    <p>Enter Master PIN to continue</p>
-                </div>
-
-                <form onSubmit={handleSubmit}>
-                    <div className="pin-input-group">
-                        <Lock size={18} className="input-icon" />
-                        <input
-                            type="password"
-                            placeholder="Enter 4-digit PIN"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            maxLength={4}
-                            autoFocus
-                        />
-                    </div>
-
-                    {error && (
-                        <div className="error-msg">
-                            <AlertCircle size={14} />
-                            <span>Invalid PIN Access Denied</span>
+        <div className="relative min-h-screen w-full flex items-center justify-center p-6 overflow-hidden bg-background">
+            <FeatherBackground />
+            
+            <motion.div
+                variants={staggerContainer}
+                initial="initial"
+                animate="animate"
+                className="relative z-10 w-full max-w-[420px]"
+            >
+                <motion.div 
+                    variants={featherTransition}
+                    className={`glass-card p-10 rounded-[2.5rem] text-center border-border/40 ${error ? 'animate-shake' : ''}`}
+                >
+                    <motion.div variants={fadeInUp} className="flex justify-center mb-10">
+                        <div className="w-20 h-20 bg-accent/10 rounded-[1.8rem] flex items-center justify-center text-accent shadow-2xl shadow-accent/20 border border-accent/20">
+                            <ShieldCheck size={40} />
                         </div>
-                    )}
+                    </motion.div>
 
-                    <button type="submit" className="login-btn">
-                        UNLOCK SYSTEM
-                    </button>
-                </form>
+                    <motion.div variants={fadeInUp}>
+                        <h1 className="text-3xl font-serif font-bold text-text-main tracking-tight mb-2">Access Portal</h1>
+                        <p className="text-text-muted text-xs font-semibold uppercase tracking-widest mb-10 opacity-70">Authenticated Session Required</p>
+                    </motion.div>
 
-                <div className="login-footer">
-                    <p>© 2026 SS FINANCE • High-Level Encryption Active</p>
-                </div>
-            </div>
+                    <form onSubmit={handleSubmit} className="space-y-6">
+                        <motion.div variants={fadeInUp} className="relative group">
+                            <Lock size={18} className="absolute left-5 top-1/2 -translate-y-1/2 text-text-muted group-focus-within:text-accent transition-colors" />
+                            <input
+                                type="password"
+                                placeholder="Enter Access PIN"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                maxLength={4}
+                                autoFocus
+                                className="w-full bg-background/50 border border-border rounded-2xl py-5 pl-14 pr-6 text-2xl tracking-[0.8em] font-bold text-center text-text-main focus:border-accent/40 outline-none transition-all placeholder:text-text-muted/30 placeholder:tracking-normal placeholder:text-sm"
+                            />
+                        </motion.div>
 
-            <style>{`
-                .login-container {
-                    height: 100vh;
-                    width: 100vw;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    background: var(--background);
-                    position: fixed;
-                    top: 0;
-                    left: 0;
-                    z-index: 1000;
-                }
-                .login-card {
-                    width: 100%;
-                    max-width: 400px;
-                    padding: 3rem;
-                    border-radius: 2rem;
-                    text-align: center;
-                    background: var(--surface);
-                    border: 1px solid var(--border);
-                    box-shadow: var(--shadow-premium);
-                    animation: fadeIn 0.5s ease-out;
-                }
-                .shield-icon {
-                    width: 64px;
-                    height: 64px;
-                    background: rgba(202, 138, 4, 0.1);
-                    border-radius: 1.25rem;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    margin: 0 auto 1.5rem;
-                    box-shadow: 0 8px 32px rgba(202, 138, 4, 0.2);
-                }
-                h1 {
-                    font-size: 1.5rem;
-                    letter-spacing: 0.1em;
-                    margin-bottom: 0.5rem;
-                    font-weight: 800;
-                }
-                .login-header p {
-                    color: var(--text-muted);
-                    font-size: 0.875rem;
-                    margin-bottom: 2.5rem;
-                }
-                .pin-input-group {
-                    position: relative;
-                    margin-bottom: 1.5rem;
-                }
-                .input-icon {
-                    position: absolute;
-                    left: 1rem;
-                    top: 50%;
-                    transform: translateY(-50%);
-                    color: var(--muted-foreground);
-                }
-                .pin-input-group input {
-                    width: 100%;
-                    background: var(--background);
-                    border: 1px solid var(--border);
-                    padding: 1rem 1rem 1rem 3rem;
-                    border-radius: 0.75rem;
-                    color: var(--text-main);
-                    font-size: 1.25rem;
-                    letter-spacing: 0.5em;
-                    text-align: center;
-                    outline: none;
-                    transition: border-color 0.2s;
-                }
-                .pin-input-group input:focus {
-                    border-color: var(--accent);
-                    background: rgba(255, 255, 255, 0.05);
-                }
-                .login-btn {
-                    width: 100%;
-                    background: var(--text-main);
-                    color: var(--surface);
-                    padding: 1rem;
-                    border-radius: 0.75rem;
+                        <AnimatePresence>
+                            {error && (
+                                <motion.div 
+                                    initial={{ opacity: 0, y: -10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, scale: 0.95 }}
+                                    className="flex items-center justify-center gap-2 text-danger text-[11px] font-bold uppercase tracking-widest py-1"
+                                >
+                                    <AlertCircle size={14} />
+                                    <span>Unauthorized Access Denied</span>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
 
-                    font-weight: 700;
-                    letter-spacing: 0.05em;
-                    border: none;
-                    cursor: pointer;
-                    transition: transform 0.2s, box-shadow 0.2s;
-                }
-                .login-btn:hover {
-                    transform: translateY(-2px);
-                    box-shadow: 0 8px 24px rgba(202, 138, 4, 0.3);
-                }
-                .error-msg {
-                    color: #ef4444;
-                    font-size: 0.75rem;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    gap: 0.5rem;
-                    margin-bottom: 1rem;
-                    font-weight: 600;
-                }
-                .login-footer {
-                    margin-top: 2.5rem;
-                    font-size: 0.7rem;
-                    color: var(--text-muted);
-                    opacity: 0.5;
-                }
-                @keyframes fadeIn {
-                    from { opacity: 0; transform: translateY(20px); }
-                    to { opacity: 1; transform: translateY(0); }
-                }
+                        <motion.button 
+                            variants={fadeInUp}
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                            type="submit" 
+                            className="w-full bg-text-main text-background py-5 rounded-2xl font-bold flex items-center justify-center gap-3 shadow-xl hover:shadow-2xl transition-shadow group overflow-hidden relative"
+                        >
+                            <span className="relative z-10 tracking-widest uppercase text-xs">Unlock System</span>
+                            <ArrowRight size={18} className="relative z-10 group-hover:translate-x-1 transition-transform" />
+                            <div className="absolute inset-0 bg-accent translate-y-full group-hover:translate-y-0 transition-transform duration-500 opacity-10" />
+                        </motion.button>
+                    </form>
+
+                    <motion.div variants={fadeInUp} className="mt-12 pt-8 border-t border-border/50">
+                        <p className="text-[10px] text-text-muted font-bold tracking-widest uppercase opacity-40 leading-relaxed">
+                            SS Finance • Mettupalayam • 2026<br/>
+                            End-to-End Encryption Protocol Active
+                        </p>
+                    </motion.div>
+                </motion.div>
+            </motion.div>
+
+            {/* Custom Animation Styles */}
+            <style jsx>{`
                 @keyframes shake {
                     0%, 100% { transform: translateX(0); }
-                    25% { transform: translateX(-8px); }
-                    75% { transform: translateX(8px); }
+                    20%, 60% { transform: translateX(-6px); }
+                    40%, 80% { transform: translateX(6px); }
                 }
-                .shake {
-                    animation: shake 0.2s ease-in-out 0s 2;
-                    border-color: #ef4444 !important;
+                .animate-shake {
+                    animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
+                    border-color: rgba(239, 68, 68, 0.4) !important;
                 }
             `}</style>
         </div>

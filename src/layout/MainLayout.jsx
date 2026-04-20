@@ -1,16 +1,14 @@
-import React, { useState } from 'react';
 import Sidebar from '../components/Sidebar';
 import Navbar from '../components/Navbar';
+import FeatherBackground from '../components/FeatherBackground';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const MainLayout = ({ children }) => {
     const [collapsed, setCollapsed] = useState(false);
 
     return (
-        <div className="flex min-h-screen bg-background text-text-main overflow-hidden">
-            {/* Solid Clean Luxury Background */}
-            <div className="fixed inset-0 overflow-hidden pointer-events-none bg-background">
-            </div>
+        <div className="flex min-h-screen bg-background text-text-main overflow-hidden font-sans">
+            <FeatherBackground />
             <Sidebar collapsed={collapsed} setCollapsed={setCollapsed} />
 
             <main className="flex-1 flex flex-col relative">

@@ -1,3 +1,4 @@
+import React, { useEffect, useState, useMemo } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { saveLoan, deleteLoan, calculateInterest, formatCurrency, addToLedger } from '../utils/loanStore';
 import { Save, X, User, Phone, Wallet, Calendar, Percent, Info, ShieldCheck, ArrowRight } from 'lucide-react';
@@ -5,7 +6,8 @@ import PageWrapper from '../components/PageWrapper';
 import AnimatedCard from '../components/AnimatedCard';
 import AnimatedButton from '../components/AnimatedButton';
 import Counter from '../components/Counter';
-import { useEffect, useState, useMemo } from 'react';
+import { staggerContainer, fadeInUp } from '../animations/variants';
+import { motion } from 'framer-motion';
 
 const AddLoan = () => {
     const navigate = useNavigate();
@@ -97,159 +99,170 @@ const AddLoan = () => {
 
     return (
         <PageWrapper>
-            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-12">
-                <div>
-                    <h1 className="text-4xl font-black text-text-main tracking-tightest">Disburse Capital</h1>
-                    <p className="text-text-muted text-sm font-bold flex items-center gap-2 mt-2 uppercase tracking-widest">
-                        <ShieldCheck size={14} className="text-accent" />
-                        Standardized Lending Agreement v4.2
-                    </p>
-                </div>
-                <AnimatedButton variant="ghost" icon={X} onClick={() => navigate('/')}>
-                    Abort Transaction
-                </AnimatedButton>
-            </div>
+            <motion.div
+                variants={staggerContainer}
+                initial="initial"
+                animate="animate"
+                className="space-y-12"
+            >
+                <motion.div variants={fadeInUp} className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+                    <div>
+                        <h1 className="text-4xl font-black text-text-main tracking-tightest">Disburse Capital</h1>
+                        <p className="text-text-muted text-sm font-bold flex items-center gap-2 mt-2 uppercase tracking-widest">
+                            <ShieldCheck size={14} className="text-accent" />
+                            Standardized Lending Agreement v4.2
+                        </p>
+                    </div>
+                    <AnimatedButton variant="ghost" icon={X} onClick={() => navigate('/')}>
+                        Abort Transaction
+                    </AnimatedButton>
+                </motion.div>
 
-            <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                {/* Left: Customer & Loan Structure */}
-                <div className="lg:col-span-8 space-y-8">
-                    <AnimatedCard delay={0.1} noHover className="p-8">
-                        <div className="flex items-center gap-4 mb-10">
-                            <div className="w-12 h-12 bg-accent/10 rounded-2xl flex items-center justify-center text-accent">
-                                <User size={24} />
-                            </div>
-                            <div>
-                                <h3 className="text-xl font-black text-text-main tracking-tight">Entity Identification</h3>
-                                <p className="text-xs font-bold text-text-muted uppercase tracking-widest">Customer Personal & Contact Parameters</p>
-                            </div>
-                        </div>
+                <motion.form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                    {/* Left: Customer & Loan Structure */}
+                    <div className="lg:col-span-8 space-y-8">
+                        <motion.div variants={fadeInUp}>
+                            <AnimatedCard noHover className="p-8">
+                                <div className="flex items-center gap-4 mb-10">
+                                    <div className="w-12 h-12 bg-accent/10 rounded-2xl flex items-center justify-center text-accent">
+                                        <User size={24} />
+                                    </div>
+                                    <div>
+                                        <h3 className="text-xl font-black text-text-main tracking-tight">Entity Identification</h3>
+                                        <p className="text-xs font-bold text-text-muted uppercase tracking-widest">Customer Personal & Contact Parameters</p>
+                                    </div>
+                                </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            <InputField
-                                label="Customer Legal Name"
-                                icon={User}
-                                name="customerName"
-                                placeholder="Alpha Client Name"
-                                value={formData.customerName}
-                                onChange={handleChange}
-                                required
-                            />
-                            <InputField
-                                label="Contact Uplink"
-                                icon={Phone}
-                                name="phone"
-                                placeholder="+91 XXXX XXXX"
-                                value={formData.phone}
-                                onChange={handleChange}
-                                required
-                            />
-                        </div>
-                    </AnimatedCard>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                    <InputField
+                                        label="Customer Legal Name"
+                                        icon={User}
+                                        name="customerName"
+                                        placeholder="Alpha Client Name"
+                                        value={formData.customerName}
+                                        onChange={handleChange}
+                                        required
+                                    />
+                                    <InputField
+                                        label="Contact Uplink"
+                                        icon={Phone}
+                                        name="phone"
+                                        placeholder="+91 XXXX XXXX"
+                                        value={formData.phone}
+                                        onChange={handleChange}
+                                        required
+                                    />
+                                </div>
+                            </AnimatedCard>
+                        </motion.div>
 
-                    <AnimatedCard delay={0.2} noHover className="p-8">
-                        <div className="flex items-center gap-4 mb-10 text-accent-secondary">
-                            <div className="w-12 h-12 bg-accent-secondary/10 rounded-2xl flex items-center justify-center">
-                                <Wallet size={24} />
-                            </div>
-                            <div>
-                                <h3 className="text-xl font-black text-text-main tracking-tight">Financial Structure</h3>
-                                <p className="text-xs font-bold text-text-muted uppercase tracking-widest">Principal, Interest & Recurrence Logic</p>
-                            </div>
-                        </div>
+                        <motion.div variants={fadeInUp}>
+                            <AnimatedCard noHover className="p-8">
+                                <div className="flex items-center gap-4 mb-10 text-accent-secondary">
+                                    <div className="w-12 h-12 bg-accent-secondary/10 rounded-2xl flex items-center justify-center">
+                                        <Wallet size={24} />
+                                    </div>
+                                    <div>
+                                        <h3 className="text-xl font-black text-text-main tracking-tight">Financial Structure</h3>
+                                        <p className="text-xs font-bold text-text-muted uppercase tracking-widest">Principal, Interest & Recurrence Logic</p>
+                                    </div>
+                                </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                            <InputField
-                                label="Principal (₹)"
-                                type="number"
-                                name="principalAmount"
-                                placeholder="0.00"
-                                value={formData.principalAmount}
-                                onChange={handleChange}
-                                required
-                            />
-                            <InputField
-                                label="Int. Rate (% Yearly)"
-                                type="number"
-                                name="interestRate"
-                                suffix={Percent}
-                                value={formData.interestRate}
-                                onChange={handleChange}
-                                required
-                            />
-                            <SelectField
-                                label="Interest Mode"
-                                name="interestType"
-                                value={formData.interestType}
-                                onChange={handleChange}
-                                options={['Simple', 'Compound']}
-                            />
-                            <SelectField
-                                label="Settlement Cycle"
-                                name="interestBasis"
-                                value={formData.interestBasis}
-                                onChange={handleChange}
-                                options={['Weekly', 'Monthly', 'Yearly']}
-                            />
-                            <InputField
-                                label="Commencement"
-                                type="date"
-                                name="borrowDate"
-                                value={formData.borrowDate}
-                                onChange={handleChange}
-                                required
-                            />
-                            <InputField
-                                label="Maturity"
-                                type="date"
-                                name="dueDate"
-                                value={formData.dueDate}
-                                onChange={handleChange}
-                                required
-                            />
-                        </div>
-                    </AnimatedCard>
-                </div>
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                                    <InputField
+                                        label="Principal (₹)"
+                                        type="number"
+                                        name="principalAmount"
+                                        placeholder="0.00"
+                                        value={formData.principalAmount}
+                                        onChange={handleChange}
+                                        required
+                                    />
+                                    <InputField
+                                        label="Int. Rate (% Yearly)"
+                                        type="number"
+                                        name="interestRate"
+                                        suffix={Percent}
+                                        value={formData.interestRate}
+                                        onChange={handleChange}
+                                        required
+                                    />
+                                    <SelectField
+                                        label="Interest Mode"
+                                        name="interestType"
+                                        value={formData.interestType}
+                                        onChange={handleChange}
+                                        options={['Simple', 'Compound']}
+                                    />
+                                    <SelectField
+                                        label="Settlement Cycle"
+                                        name="interestBasis"
+                                        value={formData.interestBasis}
+                                        onChange={handleChange}
+                                        options={['Weekly', 'Monthly', 'Yearly']}
+                                    />
+                                    <InputField
+                                        label="Commencement"
+                                        type="date"
+                                        name="borrowDate"
+                                        value={formData.borrowDate}
+                                        onChange={handleChange}
+                                        required
+                                    />
+                                    <InputField
+                                        label="Maturity"
+                                        type="date"
+                                        name="dueDate"
+                                        value={formData.dueDate}
+                                        onChange={handleChange}
+                                        required
+                                    />
+                                </div>
+                            </AnimatedCard>
+                        </motion.div>
+                    </div>
 
-                {/* Right: Summary & Actions */}
-                <div className="lg:col-span-4 space-y-8">
-                    <AnimatedCard delay={0.3} noHover className="p-8 border-accent/20 bg-accent/[0.02] sticky top-24">
-                        <h3 className="text-lg font-black text-text-main mb-8 flex items-center gap-3">
-                            <Info size={20} className="text-accent" />
-                            Agreement Preview
-                        </h3>
+                    {/* Right: Summary & Actions */}
+                    <motion.div variants={fadeInUp} className="lg:col-span-4 space-y-8">
+                        <AnimatedCard noHover className="p-8 border-accent/20 bg-accent/[0.02] sticky top-24">
+                            <h3 className="text-lg font-black text-text-main mb-8 flex items-center gap-3">
+                                <Info size={20} className="text-accent" />
+                                Agreement Preview
+                            </h3>
 
-                        <div className="space-y-6 mb-12">
-                            <SummaryRow label="Principal Injection" value={formData.principalAmount ? `₹${formData.principalAmount}` : '₹0'} />
-                            <SummaryRow label="Interest Accrual" value={liveInterest > 0 ? `₹${liveInterest.toFixed(2)}` : '—'} />
-                            <SummaryRow label="Interest Config" value={`${formData.interestRate}% ${formData.interestBasis} (${formData.interestType})`} active />
+                            <div className="space-y-6 mb-12">
+                                <SummaryRow label="Principal Injection" value={formData.principalAmount ? `₹${formData.principalAmount}` : '₹0'} />
+                                <SummaryRow label="Interest Accrual" value={liveInterest > 0 ? `₹${liveInterest.toFixed(2)}` : '—'} />
+                                <SummaryRow label="Interest Config" value={`${formData.interestRate}% ${formData.interestBasis} (${formData.interestType})`} active />
 
-                            <div className="pt-6 border-t border-border">
-                                <div className="flex justify-between items-end">
-                                    <span className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">Expected Terminal Value</span>
-                                    <div className="text-3xl font-black text-accent tracking-tighter">
-                                        <Counter value={liveTotal} prefix="₹" />
+                                <div className="pt-6 border-t border-border">
+                                    <div className="flex justify-between items-end">
+                                        <span className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">Expected Terminal Value</span>
+                                        <div className="text-3xl font-black text-accent tracking-tighter">
+                                            <Counter value={liveTotal} prefix="₹" />
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div className="space-y-4">
-                            <AnimatedButton type="submit" fullWidth icon={Save}>
-                                Finalize & Disburse
-                            </AnimatedButton>
-                            <AnimatedButton variant="secondary" fullWidth onClick={handleSaveDraft}>
-                                Save as Draft
-                            </AnimatedButton>
-                        </div>
+                            <div className="space-y-4">
+                                <AnimatedButton type="submit" fullWidth icon={Save}>
+                                    Finalize & Disburse
+                                </AnimatedButton>
+                                <AnimatedButton variant="secondary" fullWidth onClick={handleSaveDraft}>
+                                    Save as Draft
+                                </AnimatedButton>
+                            </div>
 
-                        <div className="mt-8 p-4 bg-surface rounded-xl border border-border">
-                            <p className="text-[10px] text-text-muted font-bold leading-relaxed uppercase tracking-wider">
-                                Legal Notice: Confirmation triggers immediate ledger entry and generates a non-repudiable audit trail.
-                            </p>
-                        </div>
-                    </AnimatedCard>
-                </div>
-            </form>
+                            <div className="mt-8 p-4 bg-surface rounded-xl border border-border">
+                                <p className="text-[10px] text-text-muted font-bold leading-relaxed uppercase tracking-wider">
+                                    Legal Notice: Confirmation triggers immediate ledger entry and generates a non-repudiable audit trail.
+                                </p>
+                            </div>
+                        </AnimatedCard>
+                    </motion.div>
+                </motion.form>
+            </motion.div>
         </PageWrapper>
     );
 };

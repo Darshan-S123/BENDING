@@ -7,6 +7,8 @@ import AnimatedCard from '../components/AnimatedCard';
 import AnimatedButton from '../components/AnimatedButton';
 import AnimatedTable from '../components/AnimatedTable';
 import Counter from '../components/Counter';
+import { staggerContainer, fadeInUp, featherTransition } from '../animations/variants';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const MonthlySettlement = () => {
     const [loans, setLoans] = useState([]);
@@ -132,7 +134,13 @@ const MonthlySettlement = () => {
 
     return (
         <PageWrapper>
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
+            <motion.div
+                variants={staggerContainer}
+                initial="initial"
+                animate="animate"
+                className="space-y-10"
+            >
+                <motion.div variants={fadeInUp} className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                 <div>
                     <h1 className="text-4xl font-black text-text-main tracking-tightest">Settlement Hub</h1>
                     <p className="text-text-muted text-sm font-bold flex items-center gap-2 mt-2 uppercase tracking-widest">
@@ -160,18 +168,19 @@ const MonthlySettlement = () => {
                         Report Ledger
                     </AnimatedButton>
                 </div>
-            </div>
+                </motion.div>
 
-            {/* Summary Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-                <MiniStat title="Total Members" value={filteredLoans.length} icon={Users} delay={0.1} />
-                <MiniStat title="Principal Pool" value={totals.principal} prefix="₹" icon={Wallet} delay={0.2} />
-                <MiniStat title="Interest Accrued" value={totals.interest} prefix="₹" icon={TrendingUp} delay={0.3} />
-                <MiniStat title="Total Expected" value={totals.total} prefix="₹" icon={IndianRupee} delay={0.4} highlight />
-            </div>
+                {/* Summary Grid */}
+                <motion.div variants={fadeInUp} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <MiniStat title="Total Members" value={filteredLoans.length} icon={Users} delay={0.1} />
+                    <MiniStat title="Principal Pool" value={totals.principal} prefix="₹" icon={Wallet} delay={0.2} />
+                    <MiniStat title="Interest Accrued" value={totals.interest} prefix="₹" icon={TrendingUp} delay={0.3} />
+                    <MiniStat title="Total Expected" value={totals.total} prefix="₹" icon={IndianRupee} delay={0.4} highlight />
+                </motion.div>
 
-            {/* Main Table Container */}
-            <AnimatedCard noHover className="p-0 overflow-hidden" delay={0.5}>
+                {/* Main Table Container */}
+                <motion.div variants={fadeInUp}>
+                    <AnimatedCard noHover className="p-0 overflow-hidden">
                 <AnimatedTable
                     headers={['Customer', 'Exposure', 'Interest', 'Terminal Value', 'Due Date', 'Actions']}
                     data={filteredLoans}
@@ -218,81 +227,98 @@ const MonthlySettlement = () => {
                         )
                     })}
                 />
-            </AnimatedCard>
+            </motion.div>
 
             {/* Settle Modal */}
-            {settleModal && (
-                <div className="fixed inset-0 bg-background/80 backdrop-blur-md z-[100] flex items-center justify-center p-6">
-                    <AnimatedCard className="w-full max-w-[550px] relative p-8" noHover>
-                        <button onClick={() => setSettleModal(null)} className="absolute top-6 right-6 p-2 text-text-muted hover:text-text-main rounded-xl hover:bg-surface transition-all">
-                            <X size={20} />
-                        </button>
-
-                        <div className="mb-8">
-                            <h3 className="text-2xl font-black text-text-main tracking-tight">Finalize Settlement</h3>
-                            <p className="text-text-muted text-xs font-bold uppercase tracking-widest mt-1">Beneficiary: {settleModal.customerName}</p>
-                        </div>
-
-                        <div className="flex bg-surface p-1 rounded-2xl border border-border mb-8">
-                            {['Full', 'Partial', 'Custom'].map((mode) => (
-                                <button
-                                    key={mode}
-                                    onClick={() => setSettleMode(mode)}
-                                    className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${settleMode === mode ? 'bg-accent text-primary shadow-lg shadow-accent/20' : 'text-text-muted hover:text-text-main'
-                                        }`}
-                                >
-                                    {mode}
+            <AnimatePresence>
+                {settleModal && (
+                    <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
+                        <motion.div 
+                            initial={{ opacity: 0 }} 
+                            animate={{ opacity: 1 }} 
+                            exit={{ opacity: 0 }}
+                            onClick={() => setSettleModal(null)}
+                            className="absolute inset-0 bg-background/60 backdrop-blur-xl" 
+                        />
+                        <motion.div
+                            variants={featherTransition}
+                            initial="initial"
+                            animate="animate"
+                            exit="exit"
+                            className="w-full max-w-[550px] relative z-10"
+                        >
+                            <AnimatedCard className="relative p-8" noHover>
+                                <button onClick={() => setSettleModal(null)} className="absolute top-6 right-6 p-2 text-text-muted hover:text-text-main rounded-xl hover:bg-surface transition-all">
+                                    <X size={20} />
                                 </button>
-                            ))}
-                        </div>
 
-                        <div className="space-y-6 mb-8">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div>
-                                    <label className="block text-[10px] font-black text-text-muted uppercase tracking-[0.2em] mb-2">Effective Date</label>
-                                    <input
-                                        type="date"
-                                        value={settleDate}
-                                        onChange={(e) => setSettleDate(e.target.value)}
-                                        className="w-full bg-surface border border-border rounded-xl px-4 py-3 text-sm focus:border-accent/30 outline-none font-bold"
-                                    />
+                                <div className="mb-8">
+                                    <h3 className="text-2xl font-black text-text-main tracking-tight">Finalize Settlement</h3>
+                                    <p className="text-text-muted text-xs font-bold uppercase tracking-widest mt-1">Beneficiary: {settleModal.customerName}</p>
                                 </div>
 
-                                {['Partial', 'Custom'].includes(settleMode) && (
-                                    <div className="fade-in">
-                                        <label className="block text-[10px] font-black text-text-muted uppercase tracking-[0.2em] mb-2">Liquidated Amount (₹)</label>
-                                        <input
-                                            type="number"
-                                            placeholder="0.00"
-                                            value={customAmount}
-                                            onChange={(e) => setCustomAmount(e.target.value)}
-                                            className="w-full bg-surface border border-border rounded-xl px-4 py-3 text-sm focus:border-accent/30 outline-none font-bold"
-                                            autoFocus
-                                        />
+                                <div className="flex bg-surface p-1 rounded-2xl border border-border mb-8">
+                                    {['Full', 'Partial', 'Custom'].map((mode) => (
+                                        <button
+                                            key={mode}
+                                            onClick={() => setSettleMode(mode)}
+                                            className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${settleMode === mode ? 'bg-accent text-primary shadow-lg shadow-accent/20' : 'text-text-muted hover:text-text-main'
+                                                }`}
+                                        >
+                                            {mode}
+                                        </button>
+                                    ))}
+                                </div>
+
+                                <div className="space-y-6 mb-8">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div>
+                                            <label className="block text-[10px] font-black text-text-muted uppercase tracking-[0.2em] mb-2">Effective Date</label>
+                                            <input
+                                                type="date"
+                                                value={settleDate}
+                                                onChange={(e) => setSettleDate(e.target.value)}
+                                                className="w-full bg-surface border border-border rounded-xl px-4 py-3 text-sm focus:border-accent/30 outline-none font-bold"
+                                            />
+                                        </div>
+
+                                        {['Partial', 'Custom'].includes(settleMode) && (
+                                            <div className="fade-in">
+                                                <label className="block text-[10px] font-black text-text-muted uppercase tracking-[0.2em] mb-2">Liquidated Amount (₹)</label>
+                                                <input
+                                                    type="number"
+                                                    placeholder="0.00"
+                                                    value={customAmount}
+                                                    onChange={(e) => setCustomAmount(e.target.value)}
+                                                    className="w-full bg-surface border border-border rounded-xl px-4 py-3 text-sm focus:border-accent/30 outline-none font-bold"
+                                                    autoFocus
+                                                />
+                                            </div>
+                                        )}
                                     </div>
-                                )}
-                            </div>
 
-                            <div className="bg-accent/[0.03] rounded-2xl p-6 border border-accent/10">
-                                <SummaryRow label="Injected Principal" value={formatCurrency(settleModal.principalAmount)} />
-                                <SummaryRow label="Calculated Accrual" value={formatCurrency(calculateInterest(settleModal.principalAmount, settleModal.interestRate, settleModal.interestType, settleModal.borrowDate, settleDate, settleModal.interestBasis))} active />
-                                <div className="pt-4 mt-4 border-t border-border flex justify-between items-end">
-                                    <span className="text-[10px] font-black text-text-muted uppercase tracking-widest">Aggregate Terminal</span>
-                                    <span className="text-2xl font-black text-text-main tracking-tight">
-                                        {formatCurrency(parseFloat(settleModal.principalAmount) + calculateInterest(settleModal.principalAmount, settleModal.interestRate, settleModal.interestType, settleModal.borrowDate, settleDate, settleModal.interestBasis))}
-                                    </span>
+                                    <div className="bg-accent/[0.03] rounded-2xl p-6 border border-accent/10">
+                                        <SummaryRow label="Injected Principal" value={formatCurrency(settleModal.principalAmount)} />
+                                        <SummaryRow label="Calculated Accrual" value={formatCurrency(calculateInterest(settleModal.principalAmount, settleModal.interestRate, settleModal.interestType, settleModal.borrowDate, settleDate, settleModal.interestBasis))} active />
+                                        <div className="pt-4 mt-4 border-t border-border flex justify-between items-end">
+                                            <span className="text-[10px] font-black text-text-muted uppercase tracking-widest">Aggregate Terminal</span>
+                                            <span className="text-2xl font-black text-text-main tracking-tight">
+                                                {formatCurrency(parseFloat(settleModal.principalAmount) + calculateInterest(settleModal.principalAmount, settleModal.interestRate, settleModal.interestType, settleModal.borrowDate, settleDate, settleModal.interestBasis))}
+                                            </span>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
 
-                        <div className="flex gap-4">
-                            <AnimatedButton fullWidth onClick={confirmSettlement}>
-                                {settleMode === 'Partial' ? 'Liquidate Portion' : 'Authorize Full Exit'}
-                            </AnimatedButton>
-                        </div>
-                    </AnimatedCard>
-                </div>
-            )}
+                                <div className="flex gap-4">
+                                    <AnimatedButton fullWidth onClick={confirmSettlement}>
+                                        {settleMode === 'Partial' ? 'Liquidate Portion' : 'Authorize Full Exit'}
+                                    </AnimatedButton>
+                                </div>
+                            </AnimatedCard>
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
         </PageWrapper>
     );
 };

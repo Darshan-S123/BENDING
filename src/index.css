@@ -37,10 +37,12 @@
   --success: #10b981;
   --danger: #ef4444;
 
-  --shadow-premium-val: 0 4px 20px -4px rgba(0, 0, 0, 0.03);
-  --shadow-accent-val: 0 4px 24px -4px rgba(184, 144, 82, 0.2);
+  --shadow-premium-val: 0 8px 32px -4px rgba(0, 0, 0, 0.03);
+  --shadow-accent-val: 0 12px 40px -4px rgba(184, 144, 82, 0.15);
+  --feather-blur: 80px;
+  --feather-glow: rgba(184, 144, 82, 0.1);
 
-  --sidebar-expanded: 240px;
+  --sidebar-expanded: 260px;
   --sidebar-collapsed: 80px;
   --header-h: 70px;
 }
@@ -71,8 +73,13 @@
 
 @layer components {
   .glass-card {
-    @apply bg-surface border border-border relative overflow-hidden;
+    @apply bg-surface/80 backdrop-blur-xl border border-border/50 relative overflow-hidden;
     box-shadow: var(--shadow-premium);
+  }
+
+  .feather-orb {
+    @apply absolute rounded-full blur-[var(--feather-blur)] opacity-40 pointer-events-none;
+    background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
   }
 
   .btn-premium {
