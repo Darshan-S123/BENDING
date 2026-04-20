@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Lock, ShieldCheck, AlertCircle, ArrowRight } from 'lucide-react';
 import FeatherBackground from '../components/FeatherBackground';
-import { premiumEasing, featherTransition, fadeInUp, staggerContainer } from '../animations/variants';
+import { fadeInUp, featherTransition, staggerContainer } from '../animations/variants';
 
 const Login = () => {
     const [password, setPassword] = useState('');

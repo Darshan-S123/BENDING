@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { getLoans, formatCurrency, updateLoan, calculateInterest, deleteLoan, addToLedger } from '../utils/loanStore';
 import { generateSettlementPDF } from '../utils/pdfGenerator';
-import { FileDown, Search, Trash2, CheckCircle, PieChart, Edit3, X, CalendarClock, Users, Wallet, TrendingUp, IndianRupee } from 'lucide-react';
+import { FileDown, Search, Trash2, X, CalendarClock, Users, Wallet, TrendingUp, IndianRupee } from 'lucide-react';
 import PageWrapper from '../components/PageWrapper';
 import AnimatedCard from '../components/AnimatedCard';
 import AnimatedButton from '../components/AnimatedButton';
@@ -74,7 +74,6 @@ const MonthlySettlement = () => {
             const totalDue = parseFloat(settleModal.principalAmount) + calculatedInt;
             const newPrincipal = totalDue - paid;
 
-            // New due date = 1 period after settlement date
             const nextDueDate = new Date(settleDate);
             nextDueDate.setMonth(nextDueDate.getMonth() + 1);
             const nextDueDateStr = nextDueDate.toISOString().split('T')[0];
@@ -141,33 +140,33 @@ const MonthlySettlement = () => {
                 className="space-y-10"
             >
                 <motion.div variants={fadeInUp} className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-                <div>
-                    <h1 className="text-4xl font-black text-text-main tracking-tightest">Settlement Hub</h1>
-                    <p className="text-text-muted text-sm font-bold flex items-center gap-2 mt-2 uppercase tracking-widest">
-                        <CalendarClock size={14} className="text-accent" />
-                        Collection Phase: {selectedMonth}
-                    </p>
-                </div>
-                <div className="flex gap-4">
-                    <div className="bg-surface border border-border rounded-xl px-4 flex items-center gap-3">
-                        <Search size={18} className="text-text-muted" />
-                        <select
-                            value={selectedMonth}
-                            onChange={(e) => setSelectedMonth(e.target.value)}
-                            className="bg-transparent border-none text-text-main font-bold text-sm py-2.5 outline-none cursor-pointer"
-                        >
-                            {Array.from({ length: 24 }).map((_, i) => {
-                                const d = new Date();
-                                d.setMonth(d.getMonth() + i - 12);
-                                const m = d.toLocaleDateString('en-IN', { month: 'long', year: 'numeric' });
-                                return <option key={m} value={m} className="bg-primary">{m}</option>;
-                            })}
-                        </select>
+                    <div>
+                        <h1 className="text-4xl font-black text-text-main tracking-tightest">Settlement Hub</h1>
+                        <p className="text-text-muted text-sm font-bold flex items-center gap-2 mt-2 uppercase tracking-widest">
+                            <CalendarClock size={14} className="text-accent" />
+                            Collection Phase: {selectedMonth}
+                        </p>
                     </div>
-                    <AnimatedButton icon={FileDown} onClick={handleDownload}>
-                        Report Ledger
-                    </AnimatedButton>
-                </div>
+                    <div className="flex gap-4">
+                        <div className="bg-surface border border-border rounded-xl px-4 flex items-center gap-3">
+                            <Search size={18} className="text-text-muted" />
+                            <select
+                                value={selectedMonth}
+                                onChange={(e) => setSelectedMonth(e.target.value)}
+                                className="bg-transparent border-none text-text-main font-bold text-sm py-2.5 outline-none cursor-pointer"
+                            >
+                                {Array.from({ length: 24 }).map((_, i) => {
+                                    const d = new Date();
+                                    d.setMonth(d.getMonth() + i - 12);
+                                    const m = d.toLocaleDateString('en-IN', { month: 'long', year: 'numeric' });
+                                    return <option key={m} value={m} className="bg-primary">{m}</option>;
+                                })}
+                            </select>
+                        </div>
+                        <AnimatedButton icon={FileDown} onClick={handleDownload}>
+                            Report Ledger
+                        </AnimatedButton>
+                    </div>
                 </motion.div>
 
                 {/* Summary Grid */}
@@ -181,59 +180,60 @@ const MonthlySettlement = () => {
                 {/* Main Table Container */}
                 <motion.div variants={fadeInUp}>
                     <AnimatedCard noHover className="p-0 overflow-hidden">
-                <AnimatedTable
-                    headers={['Customer', 'Exposure', 'Interest', 'Terminal Value', 'Due Date', 'Actions']}
-                    data={filteredLoans}
-                    renderRow={(loan) => ({
-                        customer: (
-                            <div className="flex items-center gap-3">
-                                <div className="w-9 h-9 rounded-xl bg-surface border border-border flex items-center justify-center text-[10px] uppercase font-black">{loan.customerName?.[0]}</div>
-                                <div className="flex flex-col">
-                                    <span className="font-bold text-text-main leading-tight">{loan.customerName}</span>
-                                    <span className="text-[10px] text-text-muted font-bold tracking-tighter">{loan.phone}</span>
-                                </div>
-                            </div>
-                        ),
-                        exposure: `₹${loan.principalAmount}`,
-                        interest: (
-                            <span className="text-accent">₹{loan.interest}</span>
-                        ),
-                        terminal: (
-                            <span className="font-black text-text-main">₹{loan.totalAmount}</span>
-                        ),
-                        dueDate: (
-                            <span className="text-text-muted font-medium">{new Date(loan.dueDate).toLocaleDateString()}</span>
-                        ),
-                        actions: (
-                            <div className="flex justify-end items-center gap-3">
-                                <AnimatedButton
-                                    size="sm"
-                                    className="px-4 py-1.5"
-                                    onClick={() => {
-                                        setSettleModal(loan);
-                                        setSettleDate(new Date().toISOString().split('T')[0]);
-                                        setSettleMode('Full');
-                                    }}
-                                >
-                                    Settle
-                                </AnimatedButton>
-                                <button
-                                    onClick={() => handleDelete(loan.id)}
-                                    className="p-2 text-text-muted hover:text-danger transition-colors"
-                                >
-                                    <Trash2 size={16} />
-                                </button>
-                            </div>
-                        )
-                    })}
-                />
+                        <AnimatedTable
+                            headers={['Customer', 'Exposure', 'Interest', 'Terminal Value', 'Due Date', 'Actions']}
+                            data={filteredLoans}
+                            renderRow={(loan) => ({
+                                customer: (
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-9 h-9 rounded-xl bg-surface border border-border flex items-center justify-center text-[10px] uppercase font-black">{loan.customerName?.[0]}</div>
+                                        <div className="flex flex-col">
+                                            <span className="font-bold text-text-main leading-tight">{loan.customerName}</span>
+                                            <span className="text-[10px] text-text-muted font-bold tracking-tighter">{loan.phone}</span>
+                                        </div>
+                                    </div>
+                                ),
+                                exposure: `₹${loan.principalAmount}`,
+                                interest: (
+                                    <span className="text-accent">₹{loan.interest}</span>
+                                ),
+                                terminal: (
+                                    <span className="font-black text-text-main">₹{loan.totalAmount}</span>
+                                ),
+                                dueDate: (
+                                    <span className="text-text-muted font-medium">{new Date(loan.dueDate).toLocaleDateString()}</span>
+                                ),
+                                actions: (
+                                    <div className="flex justify-end items-center gap-3">
+                                        <AnimatedButton
+                                            size="sm"
+                                            className="px-4 py-1.5"
+                                            onClick={() => {
+                                                setSettleModal(loan);
+                                                setSettleDate(new Date().toISOString().split('T')[0]);
+                                                setSettleMode('Full');
+                                            }}
+                                        >
+                                            Settle
+                                        </AnimatedButton>
+                                        <button
+                                            onClick={() => handleDelete(loan.id)}
+                                            className="p-2 text-text-muted hover:text-danger transition-colors"
+                                        >
+                                            <Trash2 size={16} />
+                                        </button>
+                                    </div>
+                                )
+                            })}
+                        />
                     </AnimatedCard>
                 </motion.div>
+            </motion.div>
 
             {/* Settle Modal */}
             <AnimatePresence>
                 {settleModal && (
-                    <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
+                    <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 text-text-main">
                         <motion.div 
                             initial={{ opacity: 0 }} 
                             animate={{ opacity: 1 }} 
@@ -263,8 +263,7 @@ const MonthlySettlement = () => {
                                         <button
                                             key={mode}
                                             onClick={() => setSettleMode(mode)}
-                                            className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${settleMode === mode ? 'bg-accent text-primary shadow-lg shadow-accent/20' : 'text-text-muted hover:text-text-main'
-                                                }`}
+                                            className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${settleMode === mode ? 'bg-accent text-primary shadow-lg shadow-accent/20' : 'text-text-muted hover:text-text-main'}`}
                                         >
                                             {mode}
                                         </button>
@@ -320,7 +319,6 @@ const MonthlySettlement = () => {
                     </div>
                 )}
             </AnimatePresence>
-            </motion.div>
         </PageWrapper>
     );
 };
